@@ -28,8 +28,15 @@ class HelloService(fraud_detection_grpc.HelloServiceServicer):
         # Return the response object
         return response
     
-    def fraud_logic():
-        return "logical response"
+    def fraud_logic(info):
+        
+        #card = info["creditCard"]["number"]
+        #
+        #for i in range(1, len(card)):
+        #    if card[i] != card[0]:
+        #        return "Not Fraud"
+            
+        return "Fraud"
 
 def serve():
     # Create a gRPC server

@@ -13,6 +13,7 @@ import transaction_verification_pb2_grpc as transaction_verification_grpc
 
 import grpc
 from concurrent import futures
+import re
 
 # Create a class to define the server functions, derived from
 # transaction_verification_pb2_grpc.HelloServiceServicer
@@ -28,7 +29,29 @@ class HelloService(transaction_verification_grpc.HelloServiceServicer):
         # Return the response object
         return response
     
-    def verification_logic():
+    def verification_logic(info):
+        
+        if len(info["items"]) == 0:
+            return "Fail"
+        
+        if info["user"]["name"] == "" or info["user"]["contact"] == "":
+            return "Fail"
+        
+        if info["billingAddress"]["street"] == "" or info["billingAddress"]["city"] == "" or info["billingAddress"]["state"] == "" or info["billingAddress"]["zip"] == "" or info["billingAddress"]["country"] == "" :
+            return "Fail"
+        
+        if len(info["creditCard"]["number"]) != 10:
+            return "Fail"
+        
+        if len(info["creditCard"]["cvv"]) != 3 or len(info["creditCard"]["cvv"]) != 4:
+            return "Fail"
+        
+        ab = re.compile("\d\d\/\d\d")
+        if ab.match(info["creditCard"]["expirationDate"]) and info["creditCard"]["expirationDate"][:2] <= 12 and info["creditCard"]["expirationDate"][3:] > 23:
+            return "Pass"
+        else:
+            return "Fail"
+        
         return "verified logic"
 
 def serve():

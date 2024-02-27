@@ -1,5 +1,6 @@
 import sys
 import os
+import random
 
 # This set of lines are needed to import the gRPC stubs.
 # The path of the stubs is relative to the current file, or absolute inside the container.
@@ -28,6 +29,17 @@ class HelloService(suggestions_grpc.HelloServiceServicer):
         return response
     
     def suggestions_logic():
+        books = [
+            {'bookId': '123', 'title': 'Dummy Book 1', 'author': 'Author 1'},
+            {'bookId': '456', 'title': 'Dummy Book 2', 'author': 'Author 2'},
+            {'bookId': '321', 'title': 'Dummy Book 3', 'author': 'Author 3'},
+            {'bookId': '654', 'title': 'Dummy Book 4', 'author': 'Author 4'},
+            {'bookId': '132', 'title': 'Dummy Book 5', 'author': 'Author 5'},
+            {'bookId': '465', 'title': 'Dummy Book 6', 'author': 'Author 6'}
+        ]
+
+        suggested_books = random.sample(books, 2)
+        # return suggested_books
         return "logical suggested books"
     
 
