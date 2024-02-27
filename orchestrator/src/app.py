@@ -1,6 +1,9 @@
 import sys
 import os
 
+import logging
+import threading
+
 # This set of lines are needed to import the gRPC stubs.
 # The path of the stubs is relative to the current file, or absolute inside the container.
 # Change these lines only if strictly needed.
@@ -20,6 +23,16 @@ def greet(name='you'):
         # Call the service through the stub object.
         response = stub.SayHello(fraud_detection.HelloRequest(name=name))
     return response.greeting
+
+def thread_books_func():
+    print('books thread print')
+
+def thread_fraud_func(info):
+    print("Fraud Data:", info)
+
+def thread_verification_func(info):
+    print("Verification Data:", info)
+
 
 # Import Flask.
 # Flask is a web framework for Python.
@@ -51,6 +64,20 @@ def checkout():
     """
     # Print request object data
     print("Request Data:", request.json)
+
+
+    thread_fraud = threading.Thread(target=thread_fraud_func, args=("hello1",))
+    thread_verification = threading.Thread(target=thread_verification_func, args=("hello2",))
+    thread_books = threading.Thread(target=thread_books_func)
+
+    thread_fraud.start()
+    thread_verification.start()
+    thread_books.start()
+
+    thread_fraud.join()
+    thread_verification.join()
+    thread_books.join()
+
 
     # Dummy response following the provided YAML specification for the bookstore
     order_status_response = {
