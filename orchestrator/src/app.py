@@ -13,25 +13,47 @@ sys.path.insert(0, utils_path)
 import fraud_detection_pb2 as fraud_detection
 import fraud_detection_pb2_grpc as fraud_detection_grpc
 
+FILE = __file__ if '__file__' in globals() else os.getenv("PYTHONFILE", "")
+utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/transaction_verification'))
+sys.path.insert(0, utils_path)
+import transaction_verification_pb2 as transaction_verification
+import transaction_verification_pb2_grpc as transaction_verification_grpc
+
+FILE = __file__ if '__file__' in globals() else os.getenv("PYTHONFILE", "")
+utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/suggestions'))
+sys.path.insert(0, utils_path)
+import suggestions_pb2 as suggestions
+import suggestions_pb2_grpc as suggestions_grpc
+
+
+
 import grpc
 
-def greet(name='you'):
+def fraud_detection_func(info):
     # Establish a connection with the fraud-detection gRPC service.
     with grpc.insecure_channel('fraud_detection:50051') as channel:
         # Create a stub object.
         stub = fraud_detection_grpc.HelloServiceStub(channel)
         # Call the service through the stub object.
-        response = stub.SayHello(fraud_detection.HelloRequest(name=name))
-    return response.greeting
+        response = stub.fraud_logic(fraud_detection.HelloRequest(client_data=info))
+    print("fraud response: " + response)
+    return response
 
-def thread_books_func():
-    print('books thread print')
+def transaction_verification_func(info):
+    with grpc.insecure_channel('transaction_verification:50052') as channel:
+        stub = transaction_verification_grpc.HelloServiceStub(channel)
+        response = stub.verification_logic(transaction_verification.HelloRequest(client_data=info))
+    print("verification response: " + response)
+    return response
 
-def thread_fraud_func(info):
-    print("Fraud Data:", info)
+def books_suggestion_func():
+    with grpc.insecure_channel('suggestions:50053') as channel:
+        stub = suggestions_grpc.HelloServiceStub(channel)
+        response = stub.suggestion_logic(suggestions.HelloRequest())
+    print("suggestions response: " + response)
+    return response
 
-def thread_verification_func(info):
-    print("Verification Data:", info)
+
 
 
 # Import Flask.
@@ -66,9 +88,9 @@ def checkout():
     print("Request Data:", request.json)
 
 
-    thread_fraud = threading.Thread(target=thread_fraud_func, args=("hello1",))
-    thread_verification = threading.Thread(target=thread_verification_func, args=("hello2",))
-    thread_books = threading.Thread(target=thread_books_func)
+    thread_fraud = threading.Thread(target=fraud_detection_func, args=(request.json,))
+    thread_verification = threading.Thread(target=transaction_verification_func, args=(request.json,))
+    thread_books = threading.Thread(target=books_suggestion_func)
 
     thread_fraud.start()
     thread_verification.start()
