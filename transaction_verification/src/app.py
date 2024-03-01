@@ -19,7 +19,7 @@ import re
 # transaction_verification_pb2_grpc.HelloServiceServicer
 class HelloService(transaction_verification_grpc.HelloServiceServicer):
     # Create an RPC function to say hello
-    def SayHello(self, request, context):
+    def verification_logic(self, request, context):
         # Create a HelloResponse object
         response = transaction_verification.HelloResponse()
         # Set the greeting field of the response object
@@ -27,32 +27,32 @@ class HelloService(transaction_verification_grpc.HelloServiceServicer):
         # Print the greeting message
         print(response.greeting)
         # Return the response object
-        return response
+
+        print("Verification Logic Commented Out")
+        #if len(info["items"]) == 0:
+        #    return "Fail"
+        #
+        #if info["user"]["name"] == "" or info["user"]["contact"] == "":
+        #    return "Fail"
+        #
+        #if info["billingAddress"]["street"] == "" or info["billingAddress"]["city"] == "" or info["billingAddress"]["state"] == "" or info["billingAddress"]["zip"] == "" or info["billingAddress"]["country"] == "" :
+        #    return "Fail"
+        #
+        #if len(info["creditCard"]["number"]) != 10:
+        #    return "Fail"
+        #
+        #if len(info["creditCard"]["cvv"]) != 3 or len(info["creditCard"]["cvv"]) != 4:
+        #    return "Fail"
+        #
+        #ab = re.compile("\d\d\/\d\d")
+        #if ab.match(info["creditCard"]["expirationDate"]) and info["creditCard"]["expirationDate"][:2] <= 12 and info["creditCard"]["expirationDate"][3:] > 23:
+        #    return "Pass"
+        #else:
+        #    return "Fail"
+        #
+        #return "verified logic"
     
-    def verification_logic(info):
-        
-        if len(info["items"]) == 0:
-            return "Fail"
-        
-        if info["user"]["name"] == "" or info["user"]["contact"] == "":
-            return "Fail"
-        
-        if info["billingAddress"]["street"] == "" or info["billingAddress"]["city"] == "" or info["billingAddress"]["state"] == "" or info["billingAddress"]["zip"] == "" or info["billingAddress"]["country"] == "" :
-            return "Fail"
-        
-        if len(info["creditCard"]["number"]) != 10:
-            return "Fail"
-        
-        if len(info["creditCard"]["cvv"]) != 3 or len(info["creditCard"]["cvv"]) != 4:
-            return "Fail"
-        
-        ab = re.compile("\d\d\/\d\d")
-        if ab.match(info["creditCard"]["expirationDate"]) and info["creditCard"]["expirationDate"][:2] <= 12 and info["creditCard"]["expirationDate"][3:] > 23:
-            return "Pass"
-        else:
-            return "Fail"
-        
-        return "verified logic"
+        return response
 
 def serve():
     # Create a gRPC server

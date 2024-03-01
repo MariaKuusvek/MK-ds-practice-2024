@@ -18,25 +18,24 @@ from concurrent import futures
 # fraud_detection_pb2_grpc.HelloServiceServicer
 class HelloService(fraud_detection_grpc.HelloServiceServicer):
     # Create an RPC function to say hello
-    def SayHello(self, request, context):
+    def fraud_logic(self, request, context):
         # Create a HelloResponse object
         response = fraud_detection.HelloResponse()
         # Set the greeting field of the response object
         response.greeting = "Hello, " + request.name
         # Print the greeting message
         print(response.greeting)
+        print("Fraud Logic Commented Out")
         # Return the response object
-        return response
-    
-    def fraud_logic(info):
-        
         #card = info["creditCard"]["number"]
         #
         #for i in range(1, len(card)):
         #    if card[i] != card[0]:
         #        return "Not Fraud"
             
-        return "Fraud"
+        #return "Fraud"
+
+        return response
 
 def serve():
     # Create a gRPC server

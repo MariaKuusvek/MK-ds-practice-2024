@@ -18,7 +18,7 @@ from concurrent import futures
 # suggestions_pb2_grpc.HelloServiceServicer
 class HelloService(suggestions_grpc.HelloServiceServicer):
     # Create an RPC function to say hello
-    def SayHello(self, request, context):
+    def suggestions_logic(self, request, context):
         # Create a HelloResponse object
         response = suggestions.HelloResponse()
         # Set the greeting field of the response object
@@ -26,21 +26,21 @@ class HelloService(suggestions_grpc.HelloServiceServicer):
         # Print the greeting message
         print(response.greeting)
         # Return the response object
+        print("Suggestions Logic Commented Out")
+        #books = [
+        #    {'bookId': '123', 'title': 'Dummy Book 1', 'author': 'Author 1'},
+        #    {'bookId': '456', 'title': 'Dummy Book 2', 'author': 'Author 2'},
+        #    {'bookId': '321', 'title': 'Dummy Book 3', 'author': 'Author 3'},
+        #    {'bookId': '654', 'title': 'Dummy Book 4', 'author': 'Author 4'},
+        #    {'bookId': '132', 'title': 'Dummy Book 5', 'author': 'Author 5'},
+        #    {'bookId': '465', 'title': 'Dummy Book 6', 'author': 'Author 6'}
+        #]
+#
+        #suggested_books = random.sample(books, 2)
+        ## return suggested_books
+        #return "logical suggested books"
         return response
-    
-    def suggestions_logic():
-        books = [
-            {'bookId': '123', 'title': 'Dummy Book 1', 'author': 'Author 1'},
-            {'bookId': '456', 'title': 'Dummy Book 2', 'author': 'Author 2'},
-            {'bookId': '321', 'title': 'Dummy Book 3', 'author': 'Author 3'},
-            {'bookId': '654', 'title': 'Dummy Book 4', 'author': 'Author 4'},
-            {'bookId': '132', 'title': 'Dummy Book 5', 'author': 'Author 5'},
-            {'bookId': '465', 'title': 'Dummy Book 6', 'author': 'Author 6'}
-        ]
 
-        suggested_books = random.sample(books, 2)
-        # return suggested_books
-        return "logical suggested books"
     
 
 def serve():
