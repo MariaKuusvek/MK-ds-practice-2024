@@ -18,7 +18,7 @@ from concurrent import futures
 # fraud_detection_pb2_grpc.HelloServiceServicer
 class FraudService(fraud_detection_grpc.FraudServiceServicer):
     # Create an RPC function to say hello
-    def fraud_logic(self, request, context):
+    def FraudLogic(self, request, context):
         # Create a HelloResponse object
         response = fraud_detection.FraudResponse()
         # Set the greeting field of the response object

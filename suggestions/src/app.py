@@ -18,7 +18,7 @@ from concurrent import futures
 # suggestions_pb2_grpc.HelloServiceServicer
 class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
     # Create an RPC function to say hello
-    def suggestions_logic(self, request, context):
+    def SuggestionsLogic(self, request, context):
         # Create a HelloResponse object
         response = suggestions.SuggestionsResponse()
         # Set the greeting field of the response object

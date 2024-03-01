@@ -19,7 +19,7 @@ import re
 # transaction_verification_pb2_grpc.HelloServiceServicer
 class VerificationService(transaction_verification_grpc.VerificationServiceServicer):
     # Create an RPC function to say hello
-    def verification_logic(self, request, context):
+    def VerificationLogic(self, request, context):
         # Create a HelloResponse object
         response = transaction_verification.VerificationResponse()
         # Set the greeting field of the response object
