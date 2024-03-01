@@ -2,14 +2,14 @@ syntax = "proto3";
 
 package hello;
 
-service HelloService {
-    rpc SayHello (HelloRequest) returns (HelloResponse);
+service VerificationService {
+    rpc VerificationLogic (VerificationRequest) returns (VerificationResponse);
 }
 
-message HelloRequest {
-    string name = 1;
+message VerificationRequest {
+    int32 itemsLength = 1;
 }
 
-message HelloResponse {
-    string greeting = 1;
+message VerificationResponse {
+    string verdict = 1;
 }

@@ -17,15 +17,15 @@ import re
 
 # Create a class to define the server functions, derived from
 # transaction_verification_pb2_grpc.HelloServiceServicer
-class HelloService(transaction_verification_grpc.HelloServiceServicer):
+class VerificationService(transaction_verification_grpc.VerificationServiceServicer):
     # Create an RPC function to say hello
     def verification_logic(self, request, context):
         # Create a HelloResponse object
-        response = transaction_verification.HelloResponse()
+        response = transaction_verification.VerificationResponse()
         # Set the greeting field of the response object
-        response.greeting = "Hello, " + request.name
+        response.verdict = "Hello, " + request.name
         # Print the greeting message
-        print(response.greeting)
+        print(response.verdict)
         # Return the response object
 
         print("Verification Logic Commented Out")
@@ -58,7 +58,7 @@ def serve():
     # Create a gRPC server
     server = grpc.server(futures.ThreadPoolExecutor())
     # Add HelloService
-    transaction_verification_grpc.add_HelloServiceServicer_to_server(HelloService(), server)
+    transaction_verification_grpc.add_VerificationServiceServicer_to_server(VerificationService(), server)
 
     # Listen on port 50052
     port = "50052"

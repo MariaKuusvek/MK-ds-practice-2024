@@ -16,15 +16,15 @@ from concurrent import futures
 
 # Create a class to define the server functions, derived from
 # suggestions_pb2_grpc.HelloServiceServicer
-class HelloService(suggestions_grpc.HelloServiceServicer):
+class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
     # Create an RPC function to say hello
     def suggestions_logic(self, request, context):
         # Create a HelloResponse object
-        response = suggestions.HelloResponse()
+        response = suggestions.SuggestionsResponse()
         # Set the greeting field of the response object
-        response.greeting = "Hello, " + request.name
+        response.books = "Hello, " + request.name
         # Print the greeting message
-        print(response.greeting)
+        print(response.books)
         # Return the response object
         print("Suggestions Logic Commented Out")
         #books = [
@@ -47,7 +47,7 @@ def serve():
     # Create a gRPC server
     server = grpc.server(futures.ThreadPoolExecutor())
     # Add HelloService
-    suggestions_grpc.add_HelloServiceServicer_to_server(HelloService(), server)
+    suggestions_grpc.add_SuggestionsServiceServicer_to_server(SuggestionsService(), server)
 
     # Listen on port 50053
     port = "50053"
