@@ -25,27 +25,27 @@ import suggestions_pb2_grpc as suggestions_grpc
 
 import grpc
 
-def fraud_detection_func(name='you'):
+def fraud_detection_func(creditcard='1234567890'):
     # Establish a connection with the fraud-detection gRPC service.
     with grpc.insecure_channel('fraud_detection:50051') as channel:
         # Create a stub object.
-        stub = fraud_detection_grpc.HelloServiceStub(channel)
+        stub = fraud_detection_grpc.FraudServiceStub(channel)
         # Call the service through the stub object.
-        response = stub.fraud_logic(fraud_detection.HelloRequest(name=name))
-    return response.greeting
+        response = stub.FraudLogic(fraud_detection.FraudRequest(creditcardnr=creditcard))
+    return response.verdict
 
 
-def transaction_verification_func(name='you'):
+def transaction_verification_func(itemsL=5):
     with grpc.insecure_channel('transaction_verification:50052') as channel:
-        stub = transaction_verification_grpc.HelloServiceStub(channel)
-        response = stub.verification_logic(transaction_verification.HelloRequest(name=name))
-    return response
+        stub = transaction_verification_grpc.VerificationServiceStub(channel)
+        response = stub.VerificationLogic(transaction_verification.VerificationRequest(itemsLength=itemsL))
+    return response.verdict
 
-def books_suggestion_func(name='you'):
+def books_suggestion_func():
     with grpc.insecure_channel('suggestions:50053') as channel:
-        stub = suggestions_grpc.HelloServiceStub(channel)
-        response = stub.suggestion_logic(suggestions.HelloRequest(name=name))
-    return response
+        stub = suggestions_grpc.SuggestionsServiceStub(channel)
+        response = stub.SuggestionLogic(suggestions.SuggestionsRequest())
+    return response.books
 
 
 
