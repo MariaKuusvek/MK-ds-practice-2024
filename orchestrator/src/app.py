@@ -13,52 +13,38 @@ sys.path.insert(0, utils_path)
 import fraud_detection_pb2 as fraud_detection
 import fraud_detection_pb2_grpc as fraud_detection_grpc
 
-FILE = __file__ if '__file__' in globals() else os.getenv("PYTHONFILE", "")
 utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/transaction_verification'))
-sys.path.insert(0, utils_path)
+sys.path.insert(1, utils_path)
 import transaction_verification_pb2 as transaction_verification
 import transaction_verification_pb2_grpc as transaction_verification_grpc
 
-FILE = __file__ if '__file__' in globals() else os.getenv("PYTHONFILE", "")
 utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/suggestions'))
-sys.path.insert(0, utils_path)
+sys.path.insert(2, utils_path)
 import suggestions_pb2 as suggestions
 import suggestions_pb2_grpc as suggestions_grpc
 
 import grpc
 
-def greet(name='you'):
+def fraud_detection_func(name='you'):
     # Establish a connection with the fraud-detection gRPC service.
     with grpc.insecure_channel('fraud_detection:50051') as channel:
         # Create a stub object.
         stub = fraud_detection_grpc.HelloServiceStub(channel)
         # Call the service through the stub object.
-        response = stub.SayHello(fraud_detection.HelloRequest(name=name))
+        response = stub.fraud_logic(fraud_detection.HelloRequest(name=name))
     return response.greeting
 
 
-def fraud_detection_func(info):
-    # Establish a connection with the fraud-detection gRPC service.
-    with grpc.insecure_channel('fraud_detection:50051') as channel:
-        # Create a stub object.
-        stub = fraud_detection_grpc.HelloServiceStub(channel)
-        # Call the service through the stub object.
-        response = stub.fraud_logic(fraud_detection.HelloRequest(client_data=info))
-    print("fraud response: " + response)
-    return response
-
-def transaction_verification_func(info):
+def transaction_verification_func(name='you'):
     with grpc.insecure_channel('transaction_verification:50052') as channel:
         stub = transaction_verification_grpc.HelloServiceStub(channel)
-        response = stub.verification_logic(transaction_verification.HelloRequest(client_data=info))
-    print("verification response: " + response)
+        response = stub.verification_logic(transaction_verification.HelloRequest(name=name))
     return response
 
-def books_suggestion_func():
+def books_suggestion_func(name='you'):
     with grpc.insecure_channel('suggestions:50053') as channel:
         stub = suggestions_grpc.HelloServiceStub(channel)
-        response = stub.suggestion_logic(suggestions.HelloRequest())
-    print("suggestions response: " + response)
+        response = stub.suggestion_logic(suggestions.HelloRequest(name=name))
     return response
 
 
