@@ -46,13 +46,16 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
             response.verdict = "Fail"
             return response
         
-        ab = re.compile("\d\d\/\d\d")
-        if ab.match(request.expirationDate) and int(request.expirationDate[:2]) <= 12 and int(request.expirationDate[3:]) > 23:
-            response.verdict = "Pass"
+        response.verdict = "Pass"
             return response
-        else:
-            response.verdict = "Fail"
-            return response
+        
+        #ab = re.compile("\d\d\/\d\d")
+        #if ab.match(request.expirationDate) and int(request.expirationDate[:2]) <= 12 and int(request.expirationDate[3:]) > 23:
+        #    response.verdict = "Pass"
+        #    return response
+        #else:
+        #    response.verdict = "Fail"
+        #    return response
         
        
     
