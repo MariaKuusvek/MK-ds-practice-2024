@@ -29,7 +29,7 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
         if request.itemsLength == 0:
             response.verdict = "Fail"
             return response
-        
+
         if request.userName == "" or request.userContact == "":
             response.verdict = "Fail"
             return response
@@ -41,18 +41,16 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
         if len(request.creditcardnr) <= 10:
             response.verdict = "Fail"
             return response
-        
-        if len(request.cvv) != 3 or len(request.cvv) != 4:
+
+        if len(request.cvv) != 3 and len(request.cvv) != 4:
             response.verdict = "Fail"
             return response
         
         ab = re.compile("\d\d\/\d\d")
-        if ab.match(request.expirationDate) and request.expirationDate[:2] <= 12 and request.expirationDate[3:] > 23:
-            print("exp pass")
+        if ab.match(request.expirationDate) and int(request.expirationDate[:2]) <= 12 and int(request.expirationDate[3:]) > 23:
             response.verdict = "Pass"
             return response
         else:
-            print("exp fail")
             response.verdict = "Fail"
             return response
         
