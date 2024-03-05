@@ -59,7 +59,7 @@ def books_suggestion_func():
     with grpc.insecure_channel('suggestions:50053') as channel:
         stub = suggestions_grpc.SuggestionsServiceStub(channel)
         response = stub.SuggestionsLogic(suggestions.SuggestionsRequest())
-    return response.books
+    return response
 
 
 

@@ -14,21 +14,17 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11suggestions.proto\x12\x05hello\"\x14\n\x12SuggestionsRequest\"y\n\x13SuggestionsResponse\x12\x34\n\x05\x62ooks\x18\x01 \x03(\x0b\x32%.hello.SuggestionsResponse.BooksEntry\x1a,\n\nBooksEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x32_\n\x12SuggestionsService\x12I\n\x10SuggestionsLogic\x12\x19.hello.SuggestionsRequest\x1a\x1a.hello.SuggestionsResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11suggestions.proto\x12\x05hello\"\x14\n\x12SuggestionsRequest\"\x87\x01\n\x13SuggestionsResponse\x12\x0f\n\x07\x62ook1id\x18\x01 \x01(\t\x12\x11\n\tbook1name\x18\x02 \x01(\t\x12\x13\n\x0b\x62ook1author\x18\x03 \x01(\t\x12\x0f\n\x07\x62ook2id\x18\x04 \x01(\t\x12\x11\n\tbook2name\x18\x05 \x01(\t\x12\x13\n\x0b\x62ook2author\x18\x06 \x01(\t2_\n\x12SuggestionsService\x12I\n\x10SuggestionsLogic\x12\x19.hello.SuggestionsRequest\x1a\x1a.hello.SuggestionsResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'suggestions_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
-  _globals['_SUGGESTIONSRESPONSE_BOOKSENTRY']._options = None
-  _globals['_SUGGESTIONSRESPONSE_BOOKSENTRY']._serialized_options = b'8\001'
   _globals['_SUGGESTIONSREQUEST']._serialized_start=28
   _globals['_SUGGESTIONSREQUEST']._serialized_end=48
-  _globals['_SUGGESTIONSRESPONSE']._serialized_start=50
-  _globals['_SUGGESTIONSRESPONSE']._serialized_end=171
-  _globals['_SUGGESTIONSRESPONSE_BOOKSENTRY']._serialized_start=127
-  _globals['_SUGGESTIONSRESPONSE_BOOKSENTRY']._serialized_end=171
-  _globals['_SUGGESTIONSSERVICE']._serialized_start=173
-  _globals['_SUGGESTIONSSERVICE']._serialized_end=268
+  _globals['_SUGGESTIONSRESPONSE']._serialized_start=51
+  _globals['_SUGGESTIONSRESPONSE']._serialized_end=186
+  _globals['_SUGGESTIONSSERVICE']._serialized_start=188
+  _globals['_SUGGESTIONSSERVICE']._serialized_end=283
 # @@protoc_insertion_point(module_scope)

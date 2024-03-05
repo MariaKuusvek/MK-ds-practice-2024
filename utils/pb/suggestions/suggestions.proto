@@ -10,5 +10,10 @@ message SuggestionsRequest {
 }
 
 message SuggestionsResponse {
-    map<string, string> books = 1;
+    string book1id = 1;
+    string book1name = 2;
+    string book1author = 3;
+    string book2id = 4;
+    string book2name = 5;
+    string book2author = 6;
 }

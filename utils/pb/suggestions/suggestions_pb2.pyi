@@ -1,7 +1,6 @@
-from google.protobuf.internal import containers as _containers
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
-from typing import ClassVar as _ClassVar, Mapping as _Mapping, Optional as _Optional
+from typing import ClassVar as _ClassVar, Optional as _Optional
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
@@ -10,14 +9,17 @@ class SuggestionsRequest(_message.Message):
     def __init__(self) -> None: ...
 
 class SuggestionsResponse(_message.Message):
-    __slots__ = ("books",)
-    class BooksEntry(_message.Message):
-        __slots__ = ("key", "value")
-        KEY_FIELD_NUMBER: _ClassVar[int]
-        VALUE_FIELD_NUMBER: _ClassVar[int]
-        key: str
-        value: str
-        def __init__(self, key: _Optional[str] = ..., value: _Optional[str] = ...) -> None: ...
-    BOOKS_FIELD_NUMBER: _ClassVar[int]
-    books: _containers.ScalarMap[str, str]
-    def __init__(self, books: _Optional[_Mapping[str, str]] = ...) -> None: ...
+    __slots__ = ("book1id", "book1name", "book1author", "book2id", "book2name", "book2author")
+    BOOK1ID_FIELD_NUMBER: _ClassVar[int]
+    BOOK1NAME_FIELD_NUMBER: _ClassVar[int]
+    BOOK1AUTHOR_FIELD_NUMBER: _ClassVar[int]
+    BOOK2ID_FIELD_NUMBER: _ClassVar[int]
+    BOOK2NAME_FIELD_NUMBER: _ClassVar[int]
+    BOOK2AUTHOR_FIELD_NUMBER: _ClassVar[int]
+    book1id: str
+    book1name: str
+    book1author: str
+    book2id: str
+    book2name: str
+    book2author: str
+    def __init__(self, book1id: _Optional[str] = ..., book1name: _Optional[str] = ..., book1author: _Optional[str] = ..., book2id: _Optional[str] = ..., book2name: _Optional[str] = ..., book2author: _Optional[str] = ...) -> None: ...
