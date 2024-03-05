@@ -23,7 +23,7 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
         # Create a HelloResponse object
         response = transaction_verification.VerificationResponse()
         # Set the greeting field of the response object
-        response.verdict = "Hello, " + request.name
+        response.verdict = "Hello, " + request.itemsLength
         # Print the greeting message
         print(response.verdict)
         # Return the response object

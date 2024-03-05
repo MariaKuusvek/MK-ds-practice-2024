@@ -22,7 +22,7 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
         # Create a HelloResponse object
         response = fraud_detection.FraudResponse()
         # Set the greeting field of the response object
-        response.verdict = "Hello, " + request.name
+        response.verdict = "Hello, " + request.creditcardnr
         # Print the greeting message
         print(response.verdict)
         print("Fraud Logic Commented Out")

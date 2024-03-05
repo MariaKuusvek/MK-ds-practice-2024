@@ -22,7 +22,7 @@ class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
         # Create a HelloResponse object
         response = suggestions.SuggestionsResponse()
         # Set the greeting field of the response object
-        response.books = "Hello, " + request.name
+        response.books = "Hello, "
         # Print the greeting message
         print(response.books)
         # Return the response object
