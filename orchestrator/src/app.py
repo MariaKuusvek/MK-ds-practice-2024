@@ -121,8 +121,8 @@ def checkout():
                                                                                         request.json['billingAddress']['zip'],
                                                                                         request.json['billingAddress']['country'],
                                                                                         request.json['creditCard']['number'],
-                                                                                        request.json['creditCard']['expirationDate'],
-                                                                                        request.json['creditCard']['cvv'],))
+                                                                                        request.json['creditCard']['cvv'],
+                                                                                        request.json['creditCard']['expirationDate']))
     thread_books = threading.Thread(target=books_suggestion_func)
 
     thread_fraud.start()
