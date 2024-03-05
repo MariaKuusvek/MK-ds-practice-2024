@@ -27,7 +27,7 @@ import grpc
 
 fraud_detection_result = ''
 transaction_verification_result = ''
-books_suggestions_result = ''
+books_suggestions_result = []
 
 
 def greet():
@@ -69,8 +69,14 @@ def books_suggestion_func():
     with grpc.insecure_channel('suggestions:50053') as channel:
         stub = suggestions_grpc.SuggestionsServiceStub(channel)
         response = stub.SuggestionsLogic(suggestions.SuggestionsRequest())
+
+    suggested_books = [
+            {'bookId': response.book1id, 'title': response.book1name, 'author': response.book1author},
+            {'bookId': response.book2id, 'title': response.book2name, 'author': response.book2author}
+        ]
+
     global books_suggestions_result 
-    books_suggestions_result = response
+    books_suggestions_result = suggested_books
 
 
 
@@ -105,8 +111,6 @@ def checkout():
     # Print request object data
     print("Request Data:", request.json)
 
-    print(len(request.json['items']))
-
     thread_fraud = threading.Thread(target=fraud_detection_func, args=(request.json['creditCard']['number'],))
     thread_verification = threading.Thread(target=transaction_verification_func, args=(len(request.json['items']),
                                                                                         request.json['user']['name'],
@@ -131,7 +135,9 @@ def checkout():
 
     final_verdict = ''
 
-    if fraud_detection_result != '' and transaction_verification_result != '' and books_suggestions_result != '' :
+    if fraud_detection_result != '' and transaction_verification_result != '' and len(books_suggestions_result) != 0:
+        print(fraud_detection_result)
+        print(transaction_verification_result)
         if fraud_detection_result == 'Not Fraud' and transaction_verification_result == 'Pass':
             final_verdict = 'Order Approved'
         else:
@@ -142,10 +148,7 @@ def checkout():
     order_status_response = {
         'orderId': '12345',
         'status': final_verdict,
-        'suggestedBooks': [
-            {'bookId': '123', 'title': 'Dummy Book 1', 'author': 'Author 1'},
-            {'bookId': '456', 'title': 'Dummy Book 2', 'author': 'Author 2'}
-        ]
+        'suggestedBooks': books_suggestions_result
     }
 
     return order_status_response

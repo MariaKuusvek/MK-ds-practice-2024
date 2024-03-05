@@ -27,27 +27,34 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
         print("Hello from the Transaction Verification microservice")
   
         if request.itemsLength == 0:
-            return "Fail"
+            response.verdict = "Fail"
+            return response
         
         if request.userName == "" or request.userContact == "":
-            return "Fail"
+            response.verdict = "Fail"
+            return response
         
         if request.street == "" or request.city == "" or request.state == "" or request.zip == "" or request.country == "" :
-            return "Fail"
+            response.verdict = "Fail"
+            return response
         
         if len(request.creditcardnr) <= 10:
-            return "Fail"
+            response.verdict = "Fail"
+            return response
         
         if len(request.cvv) != 3 or len(request.cvv) != 4:
-            return "Fail"
-        
-        print("HEEEEIIIII")
+            response.verdict = "Fail"
+            return response
         
         ab = re.compile("\d\d\/\d\d")
         if ab.match(request.expirationDate) and request.expirationDate[:2] <= 12 and request.expirationDate[3:] > 23:
-           return "Pass"
+            print("exp pass")
+            response.verdict = "Pass"
+            return response
         else:
-            return "Fail"
+            print("exp fail")
+            response.verdict = "Fail"
+            return response
         
        
     
