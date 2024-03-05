@@ -7,7 +7,7 @@ service VerificationService {
 }
 
 message VerificationRequest {
-    int32 itemsLength = 1;
+    repeated map<string, string> items = 1;
 }
 
 message VerificationResponse {
