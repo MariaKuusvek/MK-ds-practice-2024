@@ -34,12 +34,14 @@ class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
             {'bookId': '465', 'title': 'Dummy Book 6', 'author': 'Author 6'}
         ]
 
-        response.book1id = books[0]["bookId"]
-        response.book1name = books[0]["title"]
-        response.book1author = books[0]["author"]
-        response.book2id = books[0]["bookId"]
-        response.book2name = books[0]["title"]
-        response.book2author = books[0]["author"]
+        booksChoice = random.sample(books, 2)
+
+        response.book1id = booksChoice[0]["bookId"]
+        response.book1name = booksChoice[0]["title"]
+        response.book1author = booksChoice[0]["author"]
+        response.book2id = booksChoice[1]["bookId"]
+        response.book2name = booksChoice[1]["title"]
+        response.book2author = booksChoice[1]["author"]
 
         print(response.book2author)
         print(response.book1name)
