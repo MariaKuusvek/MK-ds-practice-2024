@@ -117,6 +117,9 @@ def checkout():
     thread_verification.join()
     thread_books.join()
 
+    print("Fraud result")
+    print(thread_fraud.join())
+
 
     # Dummy response following the provided YAML specification for the bookstore
     order_status_response = {
