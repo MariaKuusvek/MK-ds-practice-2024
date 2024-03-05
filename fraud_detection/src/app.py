@@ -19,21 +19,25 @@ from concurrent import futures
 class FraudService(fraud_detection_grpc.FraudServiceServicer):
     # Create an RPC function to say hello
     def FraudLogic(self, request, context):
-        # Create a HelloResponse object
+        # Create a FraudResponse object
         response = fraud_detection.FraudResponse()
-        # Set the greeting field of the response object
-        response.verdict = "Hello, " + request.creditcardnr
-        # Print the greeting message
-        print(response.verdict)
-        print("Fraud Logic Commented Out")
-        # Return the response object
-        #card = info["creditCard"]["number"]
-        #
-        #for i in range(1, len(card)):
-        #    if card[i] != card[0]:
-        #        return "Not Fraud"
-            
-        #return "Fraud"
+
+        # Greeting message
+        print("Hello from the Fraud Detection microservice")
+
+        card = request.creditcardnr
+        print(" Credit card nr: " + card)
+        
+        # Checking that the credit card number is not made up only one number.
+        for i in range(1, len(card)):
+            if card[i] == card[0]:
+                response.verdict = "Fraud"
+            else: 
+                response.verdict = "Not Fraud"
+                break
+        
+
+        print("Fraud Logic verdict: " + response.verdict)
 
         return response
 

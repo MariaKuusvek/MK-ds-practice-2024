@@ -25,7 +25,10 @@ import suggestions_pb2_grpc as suggestions_grpc
 
 import grpc
 
-def fraud_detection_func(creditcard='1234567890'):
+def greet():
+    print("hello")
+
+def fraud_detection_func(creditcard):
     # Establish a connection with the fraud-detection gRPC service.
     with grpc.insecure_channel('fraud_detection:50051') as channel:
         # Create a stub object.
@@ -35,10 +38,21 @@ def fraud_detection_func(creditcard='1234567890'):
     return response.verdict
 
 
-def transaction_verification_func(itemsL=5):
+def transaction_verification_func(itemsL, name, contact, street, city, state, zip, country, ccnr, cvv, expdate):
     with grpc.insecure_channel('transaction_verification:50052') as channel:
         stub = transaction_verification_grpc.VerificationServiceStub(channel)
-        response = stub.VerificationLogic(transaction_verification.VerificationRequest(itemsLength=itemsL))
+        response = stub.VerificationLogic(transaction_verification.VerificationRequest(itemsLength=itemsL,
+                                                                                       userName = name,
+                                                                                       userContact = contact,
+                                                                                       street = street,
+                                                                                       city = city,
+                                                                                       state = state,
+                                                                                       zip = zip,
+                                                                                       country = country,
+                                                                                       creditcardnr = ccnr,
+                                                                                       cvv = cvv,
+                                                                                       expirationDate = expdate,))
+        
     return response.verdict
 
 def books_suggestion_func():
@@ -69,7 +83,7 @@ def index():
     Responds with 'Hello, [name]' when a GET request is made to '/' endpoint.
     """
     # Test the fraud-detection gRPC service.
-    response = greet(name='orchestrator')
+    response = greet()
     # Return the response.
     return response
 
@@ -81,9 +95,18 @@ def checkout():
     # Print request object data
     print("Request Data:", request.json)
 
-
-    thread_fraud = threading.Thread(target=fraud_detection_func, args=(request.json,))
-    thread_verification = threading.Thread(target=transaction_verification_func, args=(request.json,))
+    thread_fraud = threading.Thread(target=fraud_detection_func, args=(request.json['creditCard']['number'],))
+    thread_verification = threading.Thread(target=transaction_verification_func, args=(len(request.json['items']),
+                                                                                        request.json['user']['name'],
+                                                                                        request.json['user']['contact'],
+                                                                                        request.json['billingAddress']['street'],
+                                                                                        request.json['billingAddress']['city'],
+                                                                                        request.json['billingAddress']['state'],
+                                                                                        request.json['billingAddress']['zip'],
+                                                                                        request.json['billingAddress']['country'],
+                                                                                        request.json['creditCard']['number'],
+                                                                                        request.json['creditCard']['expirationDate'],
+                                                                                        request.json['creditCard']['cvv'],))
     thread_books = threading.Thread(target=books_suggestion_func)
 
     thread_fraud.start()

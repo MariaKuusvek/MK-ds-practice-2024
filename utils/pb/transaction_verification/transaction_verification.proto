@@ -7,7 +7,17 @@ service VerificationService {
 }
 
 message VerificationRequest {
-    repeated map<string, string> items = 1;
+    int32 itemsLength = 1;
+    string userName = 2;
+    string userContact = 3;
+    string street = 4;
+    string city = 5;
+    string state = 6;
+    string zip = 7;
+    string country = 8;
+    string creditcardnr = 9;
+    string cvv = 10;
+    string expirationDate = 11;
 }
 
 message VerificationResponse {

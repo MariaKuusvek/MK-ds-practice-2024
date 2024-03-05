@@ -19,26 +19,26 @@ from concurrent import futures
 class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
     # Create an RPC function to say hello
     def SuggestionsLogic(self, request, context):
-        # Create a HelloResponse object
+        # Create a SuggestionsResponse object
         response = suggestions.SuggestionsResponse()
-        # Set the greeting field of the response object
-        response.books = "Hello, "
-        # Print the greeting message
+
+        # Greeting message
+        print("Hello from the Book Suggestions microservice")
+
+        books = [
+            {'bookId': '123', 'title': 'Dummy Book 1', 'author': 'Author 1'},
+            {'bookId': '456', 'title': 'Dummy Book 2', 'author': 'Author 2'},
+            {'bookId': '321', 'title': 'Dummy Book 3', 'author': 'Author 3'},
+            {'bookId': '654', 'title': 'Dummy Book 4', 'author': 'Author 4'},
+            {'bookId': '132', 'title': 'Dummy Book 5', 'author': 'Author 5'},
+            {'bookId': '465', 'title': 'Dummy Book 6', 'author': 'Author 6'}
+        ]
+
+        # Randomly choose 2 books
+        response.books = random.sample(books, 1)
+
         print(response.books)
-        # Return the response object
-        print("Suggestions Logic Commented Out")
-        #books = [
-        #    {'bookId': '123', 'title': 'Dummy Book 1', 'author': 'Author 1'},
-        #    {'bookId': '456', 'title': 'Dummy Book 2', 'author': 'Author 2'},
-        #    {'bookId': '321', 'title': 'Dummy Book 3', 'author': 'Author 3'},
-        #    {'bookId': '654', 'title': 'Dummy Book 4', 'author': 'Author 4'},
-        #    {'bookId': '132', 'title': 'Dummy Book 5', 'author': 'Author 5'},
-        #    {'bookId': '465', 'title': 'Dummy Book 6', 'author': 'Author 6'}
-        #]
-#
-        #suggested_books = random.sample(books, 2)
-        ## return suggested_books
-        #return "logical suggested books"
+
         return response
 
     

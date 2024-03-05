@@ -10,5 +10,5 @@ message SuggestionsRequest {
 }
 
 message SuggestionsResponse {
-    repeated map<string, string> books = 1;
+    map<string, string> books = 1;
 }
