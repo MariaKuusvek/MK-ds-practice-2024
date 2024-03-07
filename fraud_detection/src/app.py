@@ -50,7 +50,7 @@ def serve():
     server.add_insecure_port("[::]:" + port)
     # Start the server
     server.start()
-    print("Server started. Listening on port 50051.")
+    logging.info("Fraud Detection server started. Listening on port 50051.")
     # Keep thread alive
     server.wait_for_termination()
 
