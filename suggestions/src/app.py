@@ -15,9 +15,9 @@ import grpc
 from concurrent import futures
 
 # Create a class to define the server functions, derived from
-# suggestions_pb2_grpc.HelloServiceServicer
+# suggestions_pb2_grpc.SuggestionsServiceServicer
 class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
-    # Create an RPC function to say hello
+    # Create an RPC function for book suggestions logic
     def SuggestionsLogic(self, request, context):
         # Create a SuggestionsResponse object
         response = suggestions.SuggestionsResponse()
@@ -25,6 +25,7 @@ class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
         # Greeting message
         print("Hello from the Book Suggestions microservice")
 
+        # Choices for the suggested books
         books = [
             {'bookId': '123', 'title': 'Dummy Book 1', 'author': 'Author 1'},
             {'bookId': '456', 'title': 'Dummy Book 2', 'author': 'Author 2'},
@@ -34,17 +35,16 @@ class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
             {'bookId': '465', 'title': 'Dummy Book 6', 'author': 'Author 6'}
         ]
 
+        # Choosing randomly 2 books
         booksChoice = random.sample(books, 2)
 
+        # Creating the response
         response.book1id = booksChoice[0]["bookId"]
         response.book1name = booksChoice[0]["title"]
         response.book1author = booksChoice[0]["author"]
         response.book2id = booksChoice[1]["bookId"]
         response.book2name = booksChoice[1]["title"]
         response.book2author = booksChoice[1]["author"]
-
-        print(response.book2author)
-        print(response.book1name)
 
         return response
 

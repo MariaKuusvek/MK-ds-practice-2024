@@ -15,9 +15,9 @@ from concurrent import futures
 
 
 # Create a class to define the server functions, derived from
-# fraud_detection_pb2_grpc.HelloServiceServicer
+# fraud_detection_pb2_grpc.FraudServiceServicer
 class FraudService(fraud_detection_grpc.FraudServiceServicer):
-    # Create an RPC function to say hello
+    # Create an RPC function for fraud detection logic
     def FraudLogic(self, request, context):
         # Create a FraudResponse object
         response = fraud_detection.FraudResponse()
@@ -26,7 +26,6 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
         print("Hello from the Fraud Detection microservice")
 
         card = request.creditcardnr
-        print(" Credit card nr: " + card)
         
         # Checking that the credit card number is not made up only one number.
         for i in range(1, len(card)):
@@ -36,9 +35,7 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
                 response.verdict = "Not Fraud"
                 break
         
-
         print("Fraud Logic verdict: " + response.verdict)
-
         return response
 
 def serve():

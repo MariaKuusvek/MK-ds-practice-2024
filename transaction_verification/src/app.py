@@ -16,36 +16,42 @@ from concurrent import futures
 import re
 
 # Create a class to define the server functions, derived from
-# transaction_verification_pb2_grpc.HelloServiceServicer
+# transaction_verification_pb2_grpc.VerificationServiceServicer
 class VerificationService(transaction_verification_grpc.VerificationServiceServicer):
-    # Create an RPC function to say hello
+    # Create an RPC function for transaction verification logic
     def VerificationLogic(self, request, context):
-        # Create a HelloResponse object
+        # Create a VerificationResponse object
         response = transaction_verification.VerificationResponse()
         
         # Greeting message
         print("Hello from the Transaction Verification microservice")
   
+        # Checking the nr of books
         if request.itemsLength == 0:
             response.verdict = "Fail"
             return response
 
+        # Checking user info
         if request.userName == "" or request.userContact == "":
             response.verdict = "Fail"
             return response
         
+        # Checking billing address info
         if request.street == "" or request.city == "" or request.state == "" or request.zip == "" or request.country == "" :
             response.verdict = "Fail"
             return response
 
+        # Checking credit card nr:
         if len(request.creditcardnr) < 10:
             response.verdict = "Fail"
             return response
 
+        # Checking CVV nr:
         if len(request.cvv) != 3 and len(request.cvv) != 4:
             response.verdict = "Fail"
             return response
         
+        # Checking the expiration date:
         ab = re.compile("\d\d\/\d\d")
         if ab.match(request.expirationDate) and int(request.expirationDate[:2]) <= 12 and int(request.expirationDate[3:]) > 23:
             response.verdict = "Pass"

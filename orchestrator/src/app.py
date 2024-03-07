@@ -47,8 +47,11 @@ def fraud_detection_func(creditcard):
 
 
 def transaction_verification_func(itemsL, name, contact, street, city, state, zip, country, ccnr, cvv, expdate):
+    # Establish a connection with the transaction verification gRPC service.
     with grpc.insecure_channel('transaction_verification:50052') as channel:
+        # Create a stub object.
         stub = transaction_verification_grpc.VerificationServiceStub(channel)
+        # Call the service through the stub object.
         response = stub.VerificationLogic(transaction_verification.VerificationRequest(itemsLength=itemsL,
                                                                                        userName = name,
                                                                                        userContact = contact,
@@ -61,13 +64,17 @@ def transaction_verification_func(itemsL, name, contact, street, city, state, zi
                                                                                        cvv = cvv,
                                                                                        expirationDate = expdate,))
         
+    # Adding the result to the global variable
     global transaction_verification_result
     transaction_verification_result = response.verdict
         
 
 def books_suggestion_func():
+    # Establish a connection with the book suggestions gRPC service.
     with grpc.insecure_channel('suggestions:50053') as channel:
+        # Create a stub object.
         stub = suggestions_grpc.SuggestionsServiceStub(channel)
+        # Call the service through the stub object.
         response = stub.SuggestionsLogic(suggestions.SuggestionsRequest())
 
     suggested_books = [
@@ -75,6 +82,7 @@ def books_suggestion_func():
             {'bookId': response.book2id, 'title': response.book2name, 'author': response.book2author}
         ]
 
+    # Adding the result to the global variable
     global books_suggestions_result 
     books_suggestions_result = suggested_books
 
@@ -111,6 +119,7 @@ def checkout():
     # Print request object data
     print("Request Data:", request.json)
 
+    # Creating threads to call out microservices
     thread_fraud = threading.Thread(target=fraud_detection_func, args=(request.json['creditCard']['number'],))
     thread_verification = threading.Thread(target=transaction_verification_func, args=(len(request.json['items']),
                                                                                         request.json['user']['name'],
@@ -125,31 +134,30 @@ def checkout():
                                                                                         request.json['creditCard']['expirationDate']))
     thread_books = threading.Thread(target=books_suggestion_func)
 
+    # Starting threads
     thread_fraud.start()
     thread_verification.start()
     thread_books.start()
-
+    # Ending threads
     thread_fraud.join()
     thread_verification.join()
     thread_books.join()
 
-    final_verdict = ''
+    order_status_response = {}
 
+    # Creating response based on the results of the microservices
     if fraud_detection_result != '' and transaction_verification_result != '' and len(books_suggestions_result) != 0:
-        print(fraud_detection_result)
-        print(transaction_verification_result)
         if fraud_detection_result == 'Not Fraud' and transaction_verification_result == 'Pass':
-            final_verdict = 'Order Approved'
+            order_status_response = {
+                'orderId': '12345',
+                'status': 'Order Approved',
+                'suggestedBooks': books_suggestions_result
+            }
         else:
-            final_verdict = 'Order NOT Approved'
-
-
-    # Dummy response following the provided YAML specification for the bookstore
-    order_status_response = {
-        'orderId': '12345',
-        'status': final_verdict,
-        'suggestedBooks': books_suggestions_result
-    }
+            order_status_response = {
+                'status': 'Order Rejected',
+                'suggestedBooks': books_suggestions_result
+            }
 
     return order_status_response
 
