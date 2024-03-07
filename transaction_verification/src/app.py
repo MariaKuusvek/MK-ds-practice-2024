@@ -26,38 +26,22 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
         
         # Greeting message
         logging.info("Hello from the Transaction Verification microservice")
-  
-        # Checking the nr of books
-        if request.itemsLength == 0:
-            response.verdict = "Fail"
-            return response
 
-        # Checking user info
-        if request.userName == "" or request.userContact == "":
-            response.verdict = "Fail"
-            return response
-        
-        # Checking billing address info
-        if request.street == "" or request.city == "" or request.state == "" or request.zip == "" or request.country == "" :
-            response.verdict = "Fail"
-            return response
 
-        # Checking credit card nr:
-        if len(request.creditcardnr) < 10:
-            response.verdict = "Fail"
-            return response
-
-        # Checking CVV nr:
-        if len(request.cvv) != 3 and len(request.cvv) != 4:
-            response.verdict = "Fail"
-            return response
-        
-        # Checking the expiration date:
+        checkItemsLength = request.itemsLength != 0
+        checkUserInfo = request.userName != "" and request.userContact != ""
+        checkBillingAddress = request.street != "" and request.city != "" and request.state != "" and request.zip != "" and request.country != "" 
+        checkCreditCardNr = len(request.creditcardnr) >= 10
+        checkCVVnr = len(request.cvv) == 3 or len(request.cvv) == 4
         ab = re.compile("\d\d\/\d\d")
-        if ab.match(request.expirationDate) and int(request.expirationDate[:2]) <= 12 and int(request.expirationDate[3:]) > 23:
+        checkExpirationDate = ab.match(request.expirationDate) and int(request.expirationDate[:2]) <= 12 and int(request.expirationDate[3:]) > 23
+
+        if all([checkItemsLength, checkUserInfo, checkBillingAddress, checkCreditCardNr, checkCVVnr, checkExpirationDate]):
+            logging.info("Transaction verification verdict: Pass")
             response.verdict = "Pass"
             return response
         else:
+            logging.info("Transaction verification verdict: Pass")
             response.verdict = "Fail"
             return response
         
