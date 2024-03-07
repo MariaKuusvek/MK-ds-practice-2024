@@ -27,7 +27,7 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
         # Greeting message
         logging.info("Hello from the Transaction Verification microservice")
 
-
+        # Defining conditions for the verification process
         checkItemsLength = request.itemsLength != 0
         checkUserInfo = request.userName != "" and request.userContact != ""
         checkBillingAddress = request.street != "" and request.city != "" and request.state != "" and request.zip != "" and request.country != "" 
@@ -36,6 +36,7 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
         ab = re.compile("\d\d\/\d\d")
         checkExpirationDate = ab.match(request.expirationDate) and int(request.expirationDate[:2]) <= 12 and int(request.expirationDate[3:]) > 23
 
+        # If all contitions are True, then the verification passed.
         if all([checkItemsLength, checkUserInfo, checkBillingAddress, checkCreditCardNr, checkCVVnr, checkExpirationDate]):
             logging.info("Transaction verification verdict: Pass")
             response.verdict = "Pass"
