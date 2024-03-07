@@ -1,5 +1,7 @@
 import sys
 import os
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 # This set of lines are needed to import the gRPC stubs.
 # The path of the stubs is relative to the current file, or absolute inside the container.
@@ -23,7 +25,7 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
         response = fraud_detection.FraudResponse()
 
         # Greeting message
-        print("Hello from the Fraud Detection microservice")
+        logging.info('Hello from the Fraud Detection microservice')
 
         card = request.creditcardnr
         
@@ -35,7 +37,7 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
                 response.verdict = "Not Fraud"
                 break
         
-        print("Fraud Logic verdict: " + response.verdict)
+        logging.info("Fraud Logic verdict: " + response.verdict)
         return response
 
 def serve():

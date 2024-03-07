@@ -1,6 +1,10 @@
-
 import sys
 import os
+import grpc
+from concurrent import futures
+import re
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 # This set of lines are needed to import the gRPC stubs.
 # The path of the stubs is relative to the current file, or absolute inside the container.
@@ -11,9 +15,6 @@ sys.path.insert(0, utils_path)
 import transaction_verification_pb2 as transaction_verification
 import transaction_verification_pb2_grpc as transaction_verification_grpc
 
-import grpc
-from concurrent import futures
-import re
 
 # Create a class to define the server functions, derived from
 # transaction_verification_pb2_grpc.VerificationServiceServicer
@@ -24,7 +25,7 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
         response = transaction_verification.VerificationResponse()
         
         # Greeting message
-        print("Hello from the Transaction Verification microservice")
+        logging.info("Hello from the Transaction Verification microservice")
   
         # Checking the nr of books
         if request.itemsLength == 0:

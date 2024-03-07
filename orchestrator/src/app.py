@@ -1,8 +1,8 @@
 import sys
 import os
-
-import logging
 import threading
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 # This set of lines are needed to import the gRPC stubs.
 # The path of the stubs is relative to the current file, or absolute inside the container.
@@ -116,6 +116,9 @@ def checkout():
     """
     Responds with a JSON object containing the order ID, status, and suggested books.
     """
+
+    logging.info('Checkout REST started')
+
     # Print request object data
     print("Request Data:", request.json)
 
@@ -138,10 +141,15 @@ def checkout():
     thread_fraud.start()
     thread_verification.start()
     thread_books.start()
+
+    logging.info('Threads in orchestrator started')
+
     # Ending threads
     thread_fraud.join()
     thread_verification.join()
     thread_books.join()
+
+    logging.info('Threads in orchestrator finished')
 
     order_status_response = {}
 
@@ -158,6 +166,8 @@ def checkout():
                 'status': 'Order Rejected',
                 'suggestedBooks': books_suggestions_result
             }
+
+    logging.info('Order status response created')
 
     return order_status_response
 

@@ -1,6 +1,8 @@
 import sys
 import os
 import random
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 # This set of lines are needed to import the gRPC stubs.
 # The path of the stubs is relative to the current file, or absolute inside the container.
@@ -23,7 +25,7 @@ class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
         response = suggestions.SuggestionsResponse()
 
         # Greeting message
-        print("Hello from the Book Suggestions microservice")
+        logging.info('Hello from the Book Suggestions microservice')
 
         # Choices for the suggested books
         books = [
@@ -45,6 +47,8 @@ class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
         response.book2id = booksChoice[1]["bookId"]
         response.book2name = booksChoice[1]["title"]
         response.book2author = booksChoice[1]["author"]
+
+        logging.info('Suggested books are selected')
 
         return response
 
