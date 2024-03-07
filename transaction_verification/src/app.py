@@ -74,7 +74,7 @@ def serve():
     server.add_insecure_port("[::]:" + port)
     # Start the server
     server.start()
-    print("Server started. Listening on port 50052.")
+    logging.info("Transaction Verifiction server started. Listening on port 50052.")
     # Keep thread alive
     server.wait_for_termination()
 
