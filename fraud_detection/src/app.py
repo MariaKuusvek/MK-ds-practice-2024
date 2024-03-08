@@ -1,5 +1,7 @@
 import sys
 import os
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 # This set of lines are needed to import the gRPC stubs.
 # The path of the stubs is relative to the current file, or absolute inside the container.
@@ -15,18 +17,17 @@ from concurrent import futures
 
 
 # Create a class to define the server functions, derived from
-# fraud_detection_pb2_grpc.HelloServiceServicer
+# fraud_detection_pb2_grpc.FraudServiceServicer
 class FraudService(fraud_detection_grpc.FraudServiceServicer):
-    # Create an RPC function to say hello
+    # Create an RPC function for fraud detection logic
     def FraudLogic(self, request, context):
         # Create a FraudResponse object
         response = fraud_detection.FraudResponse()
 
         # Greeting message
-        print("Hello from the Fraud Detection microservice")
+        logging.info('Hello from the Fraud Detection microservice')
 
         card = request.creditcardnr
-        print(" Credit card nr: " + card)
         
         # Checking that the credit card number is not made up only one number.
         for i in range(1, len(card)):
@@ -36,9 +37,7 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
                 response.verdict = "Not Fraud"
                 break
         
-
-        print("Fraud Logic verdict: " + response.verdict)
-
+        logging.info("Fraud Logic verdict: " + response.verdict)
         return response
 
 def serve():
@@ -51,7 +50,7 @@ def serve():
     server.add_insecure_port("[::]:" + port)
     # Start the server
     server.start()
-    print("Server started. Listening on port 50051.")
+    logging.info("Fraud Detection server started. Listening on port 50051.")
     # Keep thread alive
     server.wait_for_termination()
 
