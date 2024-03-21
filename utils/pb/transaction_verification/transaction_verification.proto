@@ -20,6 +20,10 @@ message VerificationRequest {
     string expirationDate = 11;
 }
 
+message VerificationVCIndex {
+    int32 value = 1;
+}
+
 message VerificationResponse {
     string verdict = 1;
 }

@@ -10,6 +10,12 @@ class FraudRequest(_message.Message):
     creditcardnr: str
     def __init__(self, creditcardnr: _Optional[str] = ...) -> None: ...
 
+class FraudVCIndex(_message.Message):
+    __slots__ = ("value",)
+    VALUE_FIELD_NUMBER: _ClassVar[int]
+    value: int
+    def __init__(self, value: _Optional[int] = ...) -> None: ...
+
 class FraudResponse(_message.Message):
     __slots__ = ("verdict",)
     VERDICT_FIELD_NUMBER: _ClassVar[int]

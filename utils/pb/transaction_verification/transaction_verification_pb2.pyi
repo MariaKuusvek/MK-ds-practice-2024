@@ -30,6 +30,12 @@ class VerificationRequest(_message.Message):
     expirationDate: str
     def __init__(self, itemsLength: _Optional[int] = ..., userName: _Optional[str] = ..., userContact: _Optional[str] = ..., street: _Optional[str] = ..., city: _Optional[str] = ..., state: _Optional[str] = ..., zip: _Optional[str] = ..., country: _Optional[str] = ..., creditcardnr: _Optional[str] = ..., cvv: _Optional[str] = ..., expirationDate: _Optional[str] = ...) -> None: ...
 
+class VerificationVCIndex(_message.Message):
+    __slots__ = ("value",)
+    VALUE_FIELD_NUMBER: _ClassVar[int]
+    value: int
+    def __init__(self, value: _Optional[int] = ...) -> None: ...
+
 class VerificationResponse(_message.Message):
     __slots__ = ("verdict",)
     VERDICT_FIELD_NUMBER: _ClassVar[int]

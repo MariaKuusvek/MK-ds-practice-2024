@@ -10,6 +10,10 @@ message FraudRequest {
     string creditcardnr = 1;
 }
 
+message FraudVCIndex {
+    int32 value = 1;
+}
+
 message FraudResponse {
     string verdict = 1;
 }
