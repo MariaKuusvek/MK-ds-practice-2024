@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1etransaction_verification.proto\x12\x05hello\"\xd7\x01\n\x13VerificationRequest\x12\x13\n\x0bitemsLength\x18\x01 \x01(\x05\x12\x10\n\x08userName\x18\x02 \x01(\t\x12\x13\n\x0buserContact\x18\x03 \x01(\t\x12\x0e\n\x06street\x18\x04 \x01(\t\x12\x0c\n\x04\x63ity\x18\x05 \x01(\t\x12\r\n\x05state\x18\x06 \x01(\t\x12\x0b\n\x03zip\x18\x07 \x01(\t\x12\x0f\n\x07\x63ountry\x18\x08 \x01(\t\x12\x14\n\x0c\x63reditcardnr\x18\t \x01(\t\x12\x0b\n\x03\x63vv\x18\n \x01(\t\x12\x16\n\x0e\x65xpirationDate\x18\x0b \x01(\t\"\'\n\x14VerificationResponse\x12\x0f\n\x07verdict\x18\x01 \x01(\t2c\n\x13VerificationService\x12L\n\x11VerificationLogic\x12\x1a.hello.VerificationRequest\x1a\x1b.hello.VerificationResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x1etransaction_verification.proto\x12\x05hello\"\xd7\x01\n\x13VerificationRequest\x12\x13\n\x0bitemsLength\x18\x01 \x01(\x05\x12\x10\n\x08userName\x18\x02 \x01(\t\x12\x13\n\x0buserContact\x18\x03 \x01(\t\x12\x0e\n\x06street\x18\x04 \x01(\t\x12\x0c\n\x04\x63ity\x18\x05 \x01(\t\x12\r\n\x05state\x18\x06 \x01(\t\x12\x0b\n\x03zip\x18\x07 \x01(\t\x12\x0f\n\x07\x63ountry\x18\x08 \x01(\t\x12\x14\n\x0c\x63reditcardnr\x18\t \x01(\t\x12\x0b\n\x03\x63vv\x18\n \x01(\t\x12\x16\n\x0e\x65xpirationDate\x18\x0b \x01(\t\"$\n\x13VerificationVCIndex\x12\r\n\x05value\x18\x01 \x01(\x05\"\'\n\x14VerificationResponse\x12\x0f\n\x07verdict\x18\x01 \x01(\t2c\n\x13VerificationService\x12L\n\x11VerificationLogic\x12\x1a.hello.VerificationRequest\x1a\x1b.hello.VerificationResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -23,8 +23,10 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   _globals['_VERIFICATIONREQUEST']._serialized_start=42
   _globals['_VERIFICATIONREQUEST']._serialized_end=257
-  _globals['_VERIFICATIONRESPONSE']._serialized_start=259
-  _globals['_VERIFICATIONRESPONSE']._serialized_end=298
-  _globals['_VERIFICATIONSERVICE']._serialized_start=300
-  _globals['_VERIFICATIONSERVICE']._serialized_end=399
+  _globals['_VERIFICATIONVCINDEX']._serialized_start=259
+  _globals['_VERIFICATIONVCINDEX']._serialized_end=295
+  _globals['_VERIFICATIONRESPONSE']._serialized_start=297
+  _globals['_VERIFICATIONRESPONSE']._serialized_end=336
+  _globals['_VERIFICATIONSERVICE']._serialized_start=338
+  _globals['_VERIFICATIONSERVICE']._serialized_end=437
 # @@protoc_insertion_point(module_scope)
