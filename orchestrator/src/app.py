@@ -156,8 +156,28 @@ def checkout():
     # Creating response based on the results of the microservices
     if fraud_detection_result != '' and transaction_verification_result != '' and len(books_suggestions_result) != 0:
         if fraud_detection_result == 'Not Fraud' and transaction_verification_result == 'Pass':
+
+            logging.info("File below")
+            path = os.getcwd() + "/orchestrator/src/testFile.txt"
+
+            #file1 = open(path, "w")
+#
+            #file1.write("TEST")
+            #file1.close() 
+#
+            file = open(path, "r+")
+
+            id = file.readline()
+            newId = int(id) + 1
+            file.close()
+
+            file = open(path, "w")
+
+            file.write(str(newId))
+            file.close() 
+
             order_status_response = {
-                'orderId': '12345',
+                'orderId': newId,
                 'status': 'Order Approved',
                 'suggestedBooks': books_suggestions_result
             }
