@@ -15,6 +15,11 @@ sys.path.insert(0, utils_path)
 import transaction_verification_pb2 as transaction_verification
 import transaction_verification_pb2_grpc as transaction_verification_grpc
 
+utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/fraud_detection'))
+sys.path.insert(0, utils_path)
+import fraud_detection_pb2 as fraud_detection
+import fraud_detection_pb2_grpc as fraud_detection_grpc
+
 
 # Create a class to define the server functions, derived from
 # transaction_verification_pb2_grpc.VerificationServiceServicer
@@ -45,6 +50,17 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
             logging.info("Transaction verification verdict: Pass")
             response.verdict = "Fail"
             return response
+        
+    def VerificationMakeRequestFraud(self):
+        channel = grpc.insecure_channel('localhost:50051')
+        stub = fraud_detection_grpc.FraudServiceStub(channel)
+        request = fraud_detection.FraudVCIndex(value = 0)
+        response = stub.FraudRespondRequest(request)
+        return response
+
+    def VerificationRespondRequest(self, index):
+        clock = [6, 7, 8]
+        return clock[index]
         
        
     

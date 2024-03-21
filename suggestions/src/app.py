@@ -13,6 +13,17 @@ sys.path.insert(0, utils_path)
 import suggestions_pb2 as suggestions
 import suggestions_pb2_grpc as suggestions_grpc
 
+utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/fraud_detection'))
+sys.path.insert(0, utils_path)
+import fraud_detection_pb2 as fraud_detection
+import fraud_detection_pb2_grpc as fraud_detection_grpc
+
+utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/transaction_verification'))
+sys.path.insert(1, utils_path)
+import transaction_verification_pb2 as transaction_verification
+import transaction_verification_pb2_grpc as transaction_verification_grpc
+
+
 import grpc
 from concurrent import futures
 
@@ -20,7 +31,15 @@ from concurrent import futures
 # suggestions_pb2_grpc.SuggestionsServiceServicer
 class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
     # Create an RPC function for book suggestions logic
+    
     def SuggestionsLogic(self, request, context):
+
+        fraudVCvalue = self.SuggestionsMakeRequestFraud()
+        verificationVCvalue = self.SuggestionsMakeRequestVerification()
+
+        print(fraudVCvalue)
+        print(verificationVCvalue)
+
         # Create a SuggestionsResponse object
         response = suggestions.SuggestionsResponse()
 
@@ -51,6 +70,24 @@ class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
         logging.info('Suggested books are selected')
 
         return response
+    
+    def SuggestionsMakeRequestFraud(self):
+        channel = grpc.insecure_channel('localhost:50051')
+        stub = fraud_detection_grpc.FraudServiceStub(channel)
+        request = fraud_detection.FraudVCIndex(value = 0)
+        response = stub.FraudRespondRequest(request)
+        return response
+    
+    def SuggestionsMakeRequestVerification(self):
+        channel = grpc.insecure_channel('localhost:50052')
+        stub = transaction_verification_grpc.VerificationServiceStub(channel)
+        request = transaction_verification.VerificationVCIndex(value = 1)
+        response = stub.VerificationRespondRequest(request)
+        return response
+
+    def SuggestionsRespondRequest(self, index):
+        clock = [6, 7, 8]
+        return clock[index]
 
     
 

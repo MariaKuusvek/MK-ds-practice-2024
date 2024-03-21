@@ -12,6 +12,11 @@ sys.path.insert(0, utils_path)
 import fraud_detection_pb2 as fraud_detection
 import fraud_detection_pb2_grpc as fraud_detection_grpc
 
+utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/transaction_verification'))
+sys.path.insert(1, utils_path)
+import transaction_verification_pb2 as transaction_verification
+import transaction_verification_pb2_grpc as transaction_verification_grpc
+
 import grpc
 from concurrent import futures
 
@@ -39,6 +44,17 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
         
         logging.info("Fraud Logic verdict: " + response.verdict)
         return response
+    
+    def FraudMakeRequestVerification(self):
+        channel = grpc.insecure_channel('localhost:50052')
+        stub = transaction_verification_grpc.VerificationServiceStub(channel)
+        request = transaction_verification.VerificationVCIndex(value = 1)
+        response = stub.VerificationRespondRequest(request)
+        return response
+
+    def FraudRespondRequest(self, index):
+        clock = [6, 7, 8]
+        return clock[index]
 
 def serve():
     # Create a gRPC server
