@@ -42,7 +42,7 @@ def fraud_detection_func(creditcard, userName, userContact):
         response = stub.startFraudDecMicroService(fraud_detection.FraudThreadRequest(creditCardNr=creditcard, userName = userName, userContact = userContact))
 
 
-def transaction_verification_func(itemsL, name, contact, street, city, state, zip, country, ccnr, cvv, expdate, orderID):
+def transaction_verification_func(itemsL, name, contact, street, city, state, zip, country, ccnr, cvv, expdate, orderId):
     # Establish a connection with the transaction verification gRPC service.
     with grpc.insecure_channel('transaction_verification:50052') as channel:
         # Create a stub object.
@@ -59,7 +59,7 @@ def transaction_verification_func(itemsL, name, contact, street, city, state, zi
                                                                                                 creditcardnr = ccnr,
                                                                                                 cvv = cvv,
                                                                                                 expirationDate = expdate,
-                                                                                                orderID = orderID))
+                                                                                                orderId = orderId))
         
     # Adding the result to the global variable
     global response_verdict
