@@ -31,20 +31,42 @@ from concurrent import futures
 # suggestions_pb2_grpc.SuggestionsServiceServicer
 class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
     # Create an RPC function for book suggestions logic
-    
-    def SuggestionsLogic(self, request, context):
 
-        fraudVCvalue = self.SuggestionsMakeRequestFraud()
-        verificationVCvalue = self.SuggestionsMakeRequestVerification()
+    myCurrentVC = []
 
-        print(fraudVCvalue)
-        print(verificationVCvalue)
+    def startBookSuggestionsMicroService(self, request):
+        self.myCurrentVC = [0, 0, 0]
 
-        # Create a SuggestionsResponse object
+    def bookSuggestionsEventF(self, request):
+
         response = suggestions.SuggestionsResponse()
 
-        # Greeting message
-        logging.info('Hello from the Book Suggestions microservice')
+        if self.myCurrentVC == [0, 0, 0] and request.newVC == [2, 3, 0]:
+
+            logging.info("Book Suggestions: choosing books (event F)")
+
+            books = self.SuggestionsLogic() # Books as string
+
+            self.myCurrentVC[2] = request.newVC[2] + 1 # this should become VCc now
+
+            logging.info('VC in BooksSuggestions in event F is: ' + str(self.myCurrentVC))
+
+            response.verdict = "Pass"
+            response.reason = "ok"
+            response.books = books
+            return response
+
+            # Here we should return the values to the orchestrator.
+
+        else:
+            logging.ERROR("VC ERROR in BookSuggestions in event F!!!")
+            response.verdict = "Fail"
+            response.reason = "BookSuggestions Verdict: VC error in event F"
+            response.books = []
+            return response 
+    
+    
+    def SuggestionsLogic(self):
 
         # Choices for the suggested books
         books = [
@@ -60,34 +82,13 @@ class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
         booksChoice = random.sample(books, 2)
 
         # Creating the response
-        response.book1id = booksChoice[0]["bookId"]
-        response.book1name = booksChoice[0]["title"]
-        response.book1author = booksChoice[0]["author"]
-        response.book2id = booksChoice[1]["bookId"]
-        response.book2name = booksChoice[1]["title"]
-        response.book2author = booksChoice[1]["author"]
+        suggestedBooks = booksChoice[0]["bookId"]+ "," + booksChoice[0]["title"]+ "," + booksChoice[0]["author"] + ";" + booksChoice[1]["bookId"]+ "," + booksChoice[1]["title"] + "," + booksChoice[1]["author"]
 
         logging.info('Suggested books are selected')
 
-        return response
+        return suggestedBooks
     
-    def SuggestionsMakeRequestFraud(self):
-        channel = grpc.insecure_channel('localhost:50051')
-        stub = fraud_detection_grpc.FraudServiceStub(channel)
-        request = fraud_detection.FraudVCIndex(value = 0)
-        response = stub.FraudRespondRequest(request)
-        return response
-    
-    def SuggestionsMakeRequestVerification(self):
-        channel = grpc.insecure_channel('localhost:50052')
-        stub = transaction_verification_grpc.VerificationServiceStub(channel)
-        request = transaction_verification.VerificationVCIndex(value = 1)
-        response = stub.VerificationRespondRequest(request)
-        return response
 
-    def SuggestionsRespondRequest(self, index):
-        clock = [6, 7, 8]
-        return clock[index]
 
     
 

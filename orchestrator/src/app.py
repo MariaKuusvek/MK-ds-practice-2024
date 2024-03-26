@@ -25,48 +25,49 @@ import suggestions_pb2_grpc as suggestions_grpc
 
 import grpc
 
-fraud_detection_result = ''
-transaction_verification_result = ''
-books_suggestions_result = []
+response_verdict = ''
+response_reason = ''
+response_books = ''
 
 
 def greet():
     print("hello")
 
-def fraud_detection_func(creditcard):
+def fraud_detection_func(creditcard, userName, userContact):
     # Establish a connection with the fraud-detection gRPC service.
     with grpc.insecure_channel('fraud_detection:50051') as channel:
         # Create a stub object.
         stub = fraud_detection_grpc.FraudServiceStub(channel)
         # Call the service through the stub object.
-        response = stub.FraudLogic(fraud_detection.FraudRequest(creditcardnr=creditcard))
-
-    # Adding the result to the global variable
-    global fraud_detection_result
-    fraud_detection_result = response.verdict
+        response = stub.startFraudDecMicroService(fraud_detection.FraudThreadRequest(creditCardNr=creditcard, userName = userName, userContact = userContact))
 
 
-def transaction_verification_func(itemsL, name, contact, street, city, state, zip, country, ccnr, cvv, expdate):
+def transaction_verification_func(itemsL, name, contact, street, city, state, zip, country, ccnr, cvv, expdate, orderID):
     # Establish a connection with the transaction verification gRPC service.
     with grpc.insecure_channel('transaction_verification:50052') as channel:
         # Create a stub object.
         stub = transaction_verification_grpc.VerificationServiceStub(channel)
         # Call the service through the stub object.
-        response = stub.VerificationLogic(transaction_verification.VerificationRequest(itemsLength=itemsL,
-                                                                                       userName = name,
-                                                                                       userContact = contact,
-                                                                                       street = street,
-                                                                                       city = city,
-                                                                                       state = state,
-                                                                                       zip = zip,
-                                                                                       country = country,
-                                                                                       creditcardnr = ccnr,
-                                                                                       cvv = cvv,
-                                                                                       expirationDate = expdate,))
+        response = stub.startTransVerMicroService(transaction_verification.VerificationThreadRequest(itemsLength=itemsL,
+                                                                                                userName = name,
+                                                                                                userContact = contact,
+                                                                                                street = street,
+                                                                                                city = city,
+                                                                                                state = state,
+                                                                                                zip = zip,
+                                                                                                country = country,
+                                                                                                creditcardnr = ccnr,
+                                                                                                cvv = cvv,
+                                                                                                expirationDate = expdate,
+                                                                                                orderID = orderID))
         
     # Adding the result to the global variable
-    global transaction_verification_result
-    transaction_verification_result = response.verdict
+    global response_verdict
+    global response_reason
+    global response_books
+    response_verdict = response.verdict
+    response_reason = response.reason
+    response_books = response.books
         
 
 def books_suggestion_func():
@@ -75,16 +76,7 @@ def books_suggestion_func():
         # Create a stub object.
         stub = suggestions_grpc.SuggestionsServiceStub(channel)
         # Call the service through the stub object.
-        response = stub.SuggestionsLogic(suggestions.SuggestionsRequest())
-
-    suggested_books = [
-            {'bookId': response.book1id, 'title': response.book1name, 'author': response.book1author},
-            {'bookId': response.book2id, 'title': response.book2name, 'author': response.book2author}
-        ]
-
-    # Adding the result to the global variable
-    global books_suggestions_result 
-    books_suggestions_result = suggested_books
+        response = stub.SuggestionsLogic(suggestions.SuggestionsThreadRequest())
 
 
 
@@ -118,12 +110,24 @@ def checkout():
     """
 
     logging.info('Checkout REST started')
-
+   
     # Print request object data
     print("Request Data:", request.json)
 
+    path = os.getcwd() + "/orchestrator/src/orderId.txt"
+    file = open(path, "r+")
+    id = file.readline()
+    orderId = int(id) + 1
+    file.close()
+
+    file = open(path, "w")
+    file.write(str(orderId))
+    file.close() 
+
     # Creating threads to call out microservices
-    thread_fraud = threading.Thread(target=fraud_detection_func, args=(request.json['creditCard']['number'],))
+    thread_fraud = threading.Thread(target=fraud_detection_func, args=(request.json['creditCard']['number'],
+                                                                       request.json['user']['name'],
+                                                                       request.json['user']['contact']))
     thread_verification = threading.Thread(target=transaction_verification_func, args=(len(request.json['items']),
                                                                                         request.json['user']['name'],
                                                                                         request.json['user']['contact'],
@@ -134,7 +138,8 @@ def checkout():
                                                                                         request.json['billingAddress']['country'],
                                                                                         request.json['creditCard']['number'],
                                                                                         request.json['creditCard']['cvv'],
-                                                                                        request.json['creditCard']['expirationDate']))
+                                                                                        request.json['creditCard']['expirationDate'],
+                                                                                        orderID))
     thread_books = threading.Thread(target=books_suggestion_func)
 
     # Starting threads
@@ -154,37 +159,18 @@ def checkout():
     order_status_response = {}
 
     # Creating response based on the results of the microservices
-    if fraud_detection_result != '' and transaction_verification_result != '' and len(books_suggestions_result) != 0:
-        if fraud_detection_result == 'Not Fraud' and transaction_verification_result == 'Pass':
-
-            logging.info("File below")
-            path = os.getcwd() + "/orchestrator/src/testFile.txt"
-
-            #file1 = open(path, "w")
-#
-            #file1.write("TEST")
-            #file1.close() 
-#
-            file = open(path, "r+")
-
-            id = file.readline()
-            newId = int(id) + 1
-            file.close()
-
-            file = open(path, "w")
-
-            file.write(str(newId))
-            file.close() 
+    if response_verdict != '' and response_reason != '' and response_books != '':
+        if response_verdict == 'Pass':
 
             order_status_response = {
-                'orderId': newId,
+                'orderId': orderId,
                 'status': 'Order Approved',
-                'suggestedBooks': books_suggestions_result
+                'suggestedBooks': response_books
             }
         else:
             order_status_response = {
                 'status': 'Order Rejected',
-                'suggestedBooks': books_suggestions_result
+                'suggestedBooks': response_books
             }
 
     logging.info('Order status response created')

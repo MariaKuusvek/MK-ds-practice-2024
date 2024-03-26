@@ -17,6 +17,11 @@ sys.path.insert(1, utils_path)
 import transaction_verification_pb2 as transaction_verification
 import transaction_verification_pb2_grpc as transaction_verification_grpc
 
+utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/suggestions'))
+sys.path.insert(2, utils_path)
+import suggestions_pb2 as suggestions
+import suggestions_pb2_grpc as suggestions_grpc
+
 import grpc
 from concurrent import futures
 
@@ -24,38 +29,111 @@ from concurrent import futures
 # Create a class to define the server functions, derived from
 # fraud_detection_pb2_grpc.FraudServiceServicer
 class FraudService(fraud_detection_grpc.FraudServiceServicer):
-    # Create an RPC function for fraud detection logic
-    def FraudLogic(self, request, context):
-        # Create a FraudResponse object
+
+    myCurrentVC = []
+    creditCardNr = ''
+    userName = ''
+    userContact = ''
+
+    def startFraudDecMicroService(self, request):
+        self.myCurrentVC = [0, 0, 0]
+        self.creditCardNr = request.creditCardNr
+        self.userName = request.userName
+        self.userContact = request.userContact
+
+    def userDataEventC(self, request):
+
         response = fraud_detection.FraudResponse()
+
+        if self.myCurrentVC == [0, 0, 0] and request.newVC == [0, 2, 0]:
+
+            logging.info("Fraud Detection: checking user data (event C)")
+
+            verdict = self.FraudCheckUserData(self, self.userName, self.userContact) 
+
+            if verdict == 'Fail':
+                response.verdict = "Fail"
+                response.reason = "FraudDetection Verdict: incorrect user data"
+                response.books = []
+                return response
+
+            self.myCurrentVC[0] = request.newVC[0] + 1 # this should become VCc now
+
+            logging.info('VC in FraudService in event C is: ' + str(self.myCurrentVC))
+
+            channel = grpc.insecure_channel('localhost:50052')
+            stub = transaction_verification_grpc.VerificationServiceStub(channel)
+            request = transaction_verification.VerificationRequest(orderId = request.orderId, newVC = self.myCurrentVC)
+            response = stub.creditCardEventD(request)
+            return response
+
+        else:
+            logging.ERROR("VC ERROR in FraudService in event C!!!")
+            response.verdict = "Fail"
+            response.reason = "FraudDetection Verdict: VC error in event C"
+            response.books = []
+            return response 
+
+    def creditCardEventE(self, request):
+        response = fraud_detection.FraudResponse()
+
+        if self.myCurrentVC == [1, 2, 0] and request.newVC == [1, 3, 0]:
+
+            logging.info("Fraud Detection: checking credit card (event E)")
+
+            verdict = self.FraudCheckCreditCard(self)
+
+            if verdict == 'Fail':
+                response.verdict = "Fail"
+                response.reason = "FraudDetection Verdict: incorrect credit card"
+                response.books = []
+                return response
+
+            self.myCurrentVC[0] = request.newVC[0] + 1 # this should become VCc now
+
+            logging.info('VC in FraudService in event E is: ' + str(self.myCurrentVC))
+
+            channel = grpc.insecure_channel('localhost:50053')
+            stub = suggestions_grpc.SuggestionsServiceStub(channel)
+            request = suggestions.SuggestionsRequest(orderId = request.orderId, newVC = self.myCurrentVC)
+            response = stub.bookSuggestionsEventF(request)
+            return response
+
+        else:
+            logging.ERROR("VC ERROR in FraudService in event E!!!")
+            response.verdict = "Fail"
+            response.books = []
+            return response 
+ 
+ # Create an RPC function for fraud detection logic
+    def FraudCheckUserData(self):
+
+        # Greeting message
+        logging.info('Fraud Detection: checking User Data')
+
+        ## We need some dummy logic
+
+        return "Pass"
+
+
+    # Create an RPC function for fraud detection logic
+    def FraudCheckCreditCard(self):
+        # Create a FraudResponse object
 
         # Greeting message
         logging.info('Hello from the Fraud Detection microservice')
 
-        card = request.creditcardnr
-        
         # Checking that the credit card number is not made up only one number.
-        for i in range(1, len(card)):
-            if card[i] == card[0]:
-                response.verdict = "Fraud"
+        for i in range(1, len(self.creditCardNr)):
+            if self.creditCardNr[i] == self.creditCardNr[0]:
+                verdict = "Fail"
             else: 
-                response.verdict = "Not Fraud"
+                verdict = "Pass"
                 break
         
-        logging.info("Fraud Logic verdict: " + response.verdict)
-        return response
+        logging.info("Fraud Logic verdict: " + verdict)
+        return verdict
     
-    def FraudMakeRequestVerification(self):
-        channel = grpc.insecure_channel('localhost:50052')
-        stub = transaction_verification_grpc.VerificationServiceStub(channel)
-        request = transaction_verification.VerificationVCIndex(value = 1)
-        response = stub.VerificationRespondRequest(request)
-        return response
-
-    def FraudRespondRequest(self, index):
-        clock = [6, 7, 8]
-        return clock[index]
-
 def serve():
     # Create a gRPC server
     server = grpc.server(futures.ThreadPoolExecutor())
