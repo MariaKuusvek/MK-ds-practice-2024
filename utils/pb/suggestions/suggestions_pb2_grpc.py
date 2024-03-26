@@ -14,8 +14,13 @@ class SuggestionsServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.SuggestionsLogic = channel.unary_unary(
-                '/hello.SuggestionsService/SuggestionsLogic',
+        self.startBookSuggestionsMicroService = channel.unary_unary(
+                '/hello.SuggestionsService/startBookSuggestionsMicroService',
+                request_serializer=suggestions__pb2.SuggestionsThreadRequest.SerializeToString,
+                response_deserializer=suggestions__pb2.SuggestionsResponse.FromString,
+                )
+        self.bookSuggestionsEventF = channel.unary_unary(
+                '/hello.SuggestionsService/bookSuggestionsEventF',
                 request_serializer=suggestions__pb2.SuggestionsRequest.SerializeToString,
                 response_deserializer=suggestions__pb2.SuggestionsResponse.FromString,
                 )
@@ -24,7 +29,13 @@ class SuggestionsServiceStub(object):
 class SuggestionsServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def SuggestionsLogic(self, request, context):
+    def startBookSuggestionsMicroService(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def bookSuggestionsEventF(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -33,8 +44,13 @@ class SuggestionsServiceServicer(object):
 
 def add_SuggestionsServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'SuggestionsLogic': grpc.unary_unary_rpc_method_handler(
-                    servicer.SuggestionsLogic,
+            'startBookSuggestionsMicroService': grpc.unary_unary_rpc_method_handler(
+                    servicer.startBookSuggestionsMicroService,
+                    request_deserializer=suggestions__pb2.SuggestionsThreadRequest.FromString,
+                    response_serializer=suggestions__pb2.SuggestionsResponse.SerializeToString,
+            ),
+            'bookSuggestionsEventF': grpc.unary_unary_rpc_method_handler(
+                    servicer.bookSuggestionsEventF,
                     request_deserializer=suggestions__pb2.SuggestionsRequest.FromString,
                     response_serializer=suggestions__pb2.SuggestionsResponse.SerializeToString,
             ),
@@ -49,7 +65,7 @@ class SuggestionsService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def SuggestionsLogic(request,
+    def startBookSuggestionsMicroService(request,
             target,
             options=(),
             channel_credentials=None,
@@ -59,7 +75,24 @@ class SuggestionsService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/hello.SuggestionsService/SuggestionsLogic',
+        return grpc.experimental.unary_unary(request, target, '/hello.SuggestionsService/startBookSuggestionsMicroService',
+            suggestions__pb2.SuggestionsThreadRequest.SerializeToString,
+            suggestions__pb2.SuggestionsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def bookSuggestionsEventF(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/hello.SuggestionsService/bookSuggestionsEventF',
             suggestions__pb2.SuggestionsRequest.SerializeToString,
             suggestions__pb2.SuggestionsResponse.FromString,
             options, channel_credentials,

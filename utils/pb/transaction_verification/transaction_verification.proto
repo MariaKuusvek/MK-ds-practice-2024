@@ -3,10 +3,16 @@ syntax = "proto3";
 package hello;
 
 service VerificationService {
-    rpc VerificationLogic (VerificationRequest) returns (VerificationResponse);
+    rpc startTransVerMicroService (VerificationThreadRequest) returns (VerificationResponse);
+    rpc creditCardEventD (VerificationRequest) returns (VerificationResponse); 
 }
 
-message VerificationRequest {
+message VerificationRequest{
+    string orderId = 1;
+    repeated int32 newVC = 2;
+}
+
+message VerificationThreadRequest {
     int32 itemsLength = 1;
     string userName = 2;
     string userContact = 3;
@@ -20,10 +26,8 @@ message VerificationRequest {
     string expirationDate = 11;
 }
 
-message VerificationVCIndex {
-    int32 value = 1;
-}
-
 message VerificationResponse {
     string verdict = 1;
+    string reason = 2;
+    string books = 3;
 }

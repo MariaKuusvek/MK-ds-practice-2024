@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15\x66raud_detection.proto\x12\x05hello\"$\n\x0c\x46raudRequest\x12\x14\n\x0c\x63reditcardnr\x18\x01 \x01(\t\"\x1d\n\x0c\x46raudVCIndex\x12\r\n\x05value\x18\x01 \x01(\x05\" \n\rFraudResponse\x12\x0f\n\x07verdict\x18\x01 \x01(\t2G\n\x0c\x46raudService\x12\x37\n\nFraudLogic\x12\x13.hello.FraudRequest\x1a\x14.hello.FraudResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15\x66raud_detection.proto\x12\x05hello\".\n\x0c\x46raudRequest\x12\x0f\n\x07orderId\x18\x01 \x01(\t\x12\r\n\x05newVC\x18\x02 \x03(\x05\"Q\n\x12\x46raudThreadRequest\x12\x14\n\x0c\x63reditCardNr\x18\x01 \x01(\t\x12\x10\n\x08userName\x18\x02 \x01(\t\x12\x13\n\x0buserContact\x18\x03 \x01(\t\"?\n\rFraudResponse\x12\x0f\n\x07verdict\x18\x01 \x01(\t\x12\x0e\n\x06reason\x18\x02 \x01(\t\x12\r\n\x05\x62ooks\x18\x03 \x01(\t2\xd9\x01\n\x0c\x46raudService\x12L\n\x19startFraudDecMicroService\x12\x19.hello.FraudThreadRequest\x1a\x14.hello.FraudResponse\x12;\n\x0euserDataEventC\x12\x13.hello.FraudRequest\x1a\x14.hello.FraudResponse\x12>\n\x11\x63readitCardEventE\x12\x13.hello.FraudRequest\x1a\x14.hello.FraudResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -22,11 +22,11 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'fraud_detection_pb2', _glob
 if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   _globals['_FRAUDREQUEST']._serialized_start=32
-  _globals['_FRAUDREQUEST']._serialized_end=68
-  _globals['_FRAUDVCINDEX']._serialized_start=70
-  _globals['_FRAUDVCINDEX']._serialized_end=99
-  _globals['_FRAUDRESPONSE']._serialized_start=101
-  _globals['_FRAUDRESPONSE']._serialized_end=133
-  _globals['_FRAUDSERVICE']._serialized_start=135
-  _globals['_FRAUDSERVICE']._serialized_end=206
+  _globals['_FRAUDREQUEST']._serialized_end=78
+  _globals['_FRAUDTHREADREQUEST']._serialized_start=80
+  _globals['_FRAUDTHREADREQUEST']._serialized_end=161
+  _globals['_FRAUDRESPONSE']._serialized_start=163
+  _globals['_FRAUDRESPONSE']._serialized_end=226
+  _globals['_FRAUDSERVICE']._serialized_start=229
+  _globals['_FRAUDSERVICE']._serialized_end=446
 # @@protoc_insertion_point(module_scope)

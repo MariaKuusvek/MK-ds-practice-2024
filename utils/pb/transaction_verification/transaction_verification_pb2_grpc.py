@@ -14,8 +14,13 @@ class VerificationServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.VerificationLogic = channel.unary_unary(
-                '/hello.VerificationService/VerificationLogic',
+        self.startTransVerMicroService = channel.unary_unary(
+                '/hello.VerificationService/startTransVerMicroService',
+                request_serializer=transaction__verification__pb2.VerificationThreadRequest.SerializeToString,
+                response_deserializer=transaction__verification__pb2.VerificationResponse.FromString,
+                )
+        self.creditCardEventD = channel.unary_unary(
+                '/hello.VerificationService/creditCardEventD',
                 request_serializer=transaction__verification__pb2.VerificationRequest.SerializeToString,
                 response_deserializer=transaction__verification__pb2.VerificationResponse.FromString,
                 )
@@ -24,7 +29,13 @@ class VerificationServiceStub(object):
 class VerificationServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def VerificationLogic(self, request, context):
+    def startTransVerMicroService(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def creditCardEventD(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -33,8 +44,13 @@ class VerificationServiceServicer(object):
 
 def add_VerificationServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'VerificationLogic': grpc.unary_unary_rpc_method_handler(
-                    servicer.VerificationLogic,
+            'startTransVerMicroService': grpc.unary_unary_rpc_method_handler(
+                    servicer.startTransVerMicroService,
+                    request_deserializer=transaction__verification__pb2.VerificationThreadRequest.FromString,
+                    response_serializer=transaction__verification__pb2.VerificationResponse.SerializeToString,
+            ),
+            'creditCardEventD': grpc.unary_unary_rpc_method_handler(
+                    servicer.creditCardEventD,
                     request_deserializer=transaction__verification__pb2.VerificationRequest.FromString,
                     response_serializer=transaction__verification__pb2.VerificationResponse.SerializeToString,
             ),
@@ -49,7 +65,7 @@ class VerificationService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def VerificationLogic(request,
+    def startTransVerMicroService(request,
             target,
             options=(),
             channel_credentials=None,
@@ -59,7 +75,24 @@ class VerificationService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/hello.VerificationService/VerificationLogic',
+        return grpc.experimental.unary_unary(request, target, '/hello.VerificationService/startTransVerMicroService',
+            transaction__verification__pb2.VerificationThreadRequest.SerializeToString,
+            transaction__verification__pb2.VerificationResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def creditCardEventD(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/hello.VerificationService/creditCardEventD',
             transaction__verification__pb2.VerificationRequest.SerializeToString,
             transaction__verification__pb2.VerificationResponse.FromString,
             options, channel_credentials,

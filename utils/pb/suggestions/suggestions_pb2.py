@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11suggestions.proto\x12\x05hello\"\x14\n\x12SuggestionsRequest\"\x87\x01\n\x13SuggestionsResponse\x12\x0f\n\x07\x62ook1id\x18\x01 \x01(\t\x12\x11\n\tbook1name\x18\x02 \x01(\t\x12\x13\n\x0b\x62ook1author\x18\x03 \x01(\t\x12\x0f\n\x07\x62ook2id\x18\x04 \x01(\t\x12\x11\n\tbook2name\x18\x05 \x01(\t\x12\x13\n\x0b\x62ook2author\x18\x06 \x01(\t2_\n\x12SuggestionsService\x12I\n\x10SuggestionsLogic\x12\x19.hello.SuggestionsRequest\x1a\x1a.hello.SuggestionsResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11suggestions.proto\x12\x05hello\"4\n\x12SuggestionsRequest\x12\x0f\n\x07orderId\x18\x01 \x01(\t\x12\r\n\x05newVC\x18\x02 \x03(\x05\"\x1a\n\x18SuggestionsThreadRequest\"E\n\x13SuggestionsResponse\x12\x0f\n\x07verdict\x18\x01 \x01(\t\x12\x0e\n\x06reason\x18\x02 \x01(\t\x12\r\n\x05\x62ooks\x18\x03 \x01(\t2\xc5\x01\n\x12SuggestionsService\x12_\n startBookSuggestionsMicroService\x12\x1f.hello.SuggestionsThreadRequest\x1a\x1a.hello.SuggestionsResponse\x12N\n\x15\x62ookSuggestionsEventF\x12\x19.hello.SuggestionsRequest\x1a\x1a.hello.SuggestionsResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -22,9 +22,11 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'suggestions_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   _globals['_SUGGESTIONSREQUEST']._serialized_start=28
-  _globals['_SUGGESTIONSREQUEST']._serialized_end=48
-  _globals['_SUGGESTIONSRESPONSE']._serialized_start=51
-  _globals['_SUGGESTIONSRESPONSE']._serialized_end=186
-  _globals['_SUGGESTIONSSERVICE']._serialized_start=188
-  _globals['_SUGGESTIONSSERVICE']._serialized_end=283
+  _globals['_SUGGESTIONSREQUEST']._serialized_end=80
+  _globals['_SUGGESTIONSTHREADREQUEST']._serialized_start=82
+  _globals['_SUGGESTIONSTHREADREQUEST']._serialized_end=108
+  _globals['_SUGGESTIONSRESPONSE']._serialized_start=110
+  _globals['_SUGGESTIONSRESPONSE']._serialized_end=179
+  _globals['_SUGGESTIONSSERVICE']._serialized_start=182
+  _globals['_SUGGESTIONSSERVICE']._serialized_end=379
 # @@protoc_insertion_point(module_scope)

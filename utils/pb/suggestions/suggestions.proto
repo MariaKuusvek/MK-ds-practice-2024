@@ -3,17 +3,20 @@ syntax = "proto3";
 package hello;
 
 service SuggestionsService {
-    rpc SuggestionsLogic (SuggestionsRequest) returns (SuggestionsResponse);
+    rpc startBookSuggestionsMicroService (SuggestionsThreadRequest) returns (SuggestionsResponse);
+    rpc bookSuggestionsEventF (SuggestionsRequest) returns (SuggestionsResponse);
 }
 
 message SuggestionsRequest {
+    string orderId = 1;
+    repeated int32 newVC = 2;
+}
+
+message SuggestionsThreadRequest {
 }
 
 message SuggestionsResponse {
-    string book1id = 1;
-    string book1name = 2;
-    string book1author = 3;
-    string book2id = 4;
-    string book2name = 5;
-    string book2author = 6;
+    string verdict = 1;
+    string reason = 2;
+    string books = 3;
 }

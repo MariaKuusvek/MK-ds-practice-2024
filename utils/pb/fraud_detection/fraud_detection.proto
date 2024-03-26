@@ -3,17 +3,24 @@ syntax = "proto3";
 package hello;
 
 service FraudService {
-    rpc FraudLogic (FraudRequest) returns (FraudResponse);
+    rpc startFraudDecMicroService (FraudThreadRequest) returns (FraudResponse);
+    rpc userDataEventC (FraudRequest) returns (FraudResponse);
+    rpc creaditCardEventE (FraudRequest) returns (FraudResponse);
 }
 
 message FraudRequest {
-    string creditcardnr = 1;
+    string orderId = 1;
+    repeated int32 newVC = 2;
 }
 
-message FraudVCIndex {
-    int32 value = 1;
+message FraudThreadRequest {
+    string creditCardNr = 1;
+    string userName = 2;
+    string userContact = 3;
 }
 
 message FraudResponse {
     string verdict = 1;
+    string reason = 2;
+    string books = 3;
 }
