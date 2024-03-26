@@ -14,7 +14,7 @@ class VerificationRequest(_message.Message):
     def __init__(self, orderId: _Optional[str] = ..., newVC: _Optional[_Iterable[int]] = ...) -> None: ...
 
 class VerificationThreadRequest(_message.Message):
-    __slots__ = ("itemsLength", "userName", "userContact", "street", "city", "state", "zip", "country", "creditcardnr", "cvv", "expirationDate")
+    __slots__ = ("itemsLength", "userName", "userContact", "street", "city", "state", "zip", "country", "creditcardnr", "cvv", "expirationDate", "orderId")
     ITEMSLENGTH_FIELD_NUMBER: _ClassVar[int]
     USERNAME_FIELD_NUMBER: _ClassVar[int]
     USERCONTACT_FIELD_NUMBER: _ClassVar[int]
@@ -26,6 +26,7 @@ class VerificationThreadRequest(_message.Message):
     CREDITCARDNR_FIELD_NUMBER: _ClassVar[int]
     CVV_FIELD_NUMBER: _ClassVar[int]
     EXPIRATIONDATE_FIELD_NUMBER: _ClassVar[int]
+    ORDERID_FIELD_NUMBER: _ClassVar[int]
     itemsLength: int
     userName: str
     userContact: str
@@ -37,7 +38,8 @@ class VerificationThreadRequest(_message.Message):
     creditcardnr: str
     cvv: str
     expirationDate: str
-    def __init__(self, itemsLength: _Optional[int] = ..., userName: _Optional[str] = ..., userContact: _Optional[str] = ..., street: _Optional[str] = ..., city: _Optional[str] = ..., state: _Optional[str] = ..., zip: _Optional[str] = ..., country: _Optional[str] = ..., creditcardnr: _Optional[str] = ..., cvv: _Optional[str] = ..., expirationDate: _Optional[str] = ...) -> None: ...
+    orderId: str
+    def __init__(self, itemsLength: _Optional[int] = ..., userName: _Optional[str] = ..., userContact: _Optional[str] = ..., street: _Optional[str] = ..., city: _Optional[str] = ..., state: _Optional[str] = ..., zip: _Optional[str] = ..., country: _Optional[str] = ..., creditcardnr: _Optional[str] = ..., cvv: _Optional[str] = ..., expirationDate: _Optional[str] = ..., orderId: _Optional[str] = ...) -> None: ...
 
 class VerificationResponse(_message.Message):
     __slots__ = ("verdict", "reason", "books")

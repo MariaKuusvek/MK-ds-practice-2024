@@ -24,6 +24,7 @@ message VerificationThreadRequest {
     string creditcardnr = 9;
     string cvv = 10;
     string expirationDate = 11;
+    string orderId = 12;
 }
 
 message VerificationResponse {

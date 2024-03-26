@@ -76,7 +76,7 @@ def books_suggestion_func():
         # Create a stub object.
         stub = suggestions_grpc.SuggestionsServiceStub(channel)
         # Call the service through the stub object.
-        response = stub.SuggestionsLogic(suggestions.SuggestionsThreadRequest())
+        response = stub.startBookSuggestionsMicroService(suggestions.SuggestionsThreadRequest())
 
 
 
@@ -139,7 +139,7 @@ def checkout():
                                                                                         request.json['creditCard']['number'],
                                                                                         request.json['creditCard']['cvv'],
                                                                                         request.json['creditCard']['expirationDate'],
-                                                                                        orderID))
+                                                                                        orderId))
     thread_books = threading.Thread(target=books_suggestion_func)
 
     # Starting threads
