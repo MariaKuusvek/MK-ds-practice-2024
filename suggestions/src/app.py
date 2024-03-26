@@ -34,8 +34,10 @@ class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
 
     myCurrentVC = []
 
-    def startBookSuggestionsMicroService(self, request):
+    def startBookSuggestionsMicroService(self, request, context):
         self.myCurrentVC = [0, 0, 0]
+
+        logging.info("Suggestions service started successfully")
 
     def bookSuggestionsEventF(self, request):
 

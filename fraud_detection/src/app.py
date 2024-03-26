@@ -35,11 +35,13 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
     userName = ''
     userContact = ''
 
-    def startFraudDecMicroService(self, request):
+    def startFraudDecMicroService(self, request, context):
         self.myCurrentVC = [0, 0, 0]
         self.creditCardNr = request.creditCardNr
         self.userName = request.userName
         self.userContact = request.userContact
+
+        logging.info("Fraud Detection started successfully")
 
     def userDataEventC(self, request):
 

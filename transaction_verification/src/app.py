@@ -54,6 +54,8 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
         self.cvv = request.cvv
         self.expirationDate = request.expirationDate
 
+        logging.info("Transaction Service started successfully")
+
         response = self.itemsLengthEventA(self, request.orderID)
         return response
 
