@@ -24,8 +24,8 @@ class FraudServiceStub(object):
                 request_serializer=fraud__detection__pb2.FraudRequest.SerializeToString,
                 response_deserializer=fraud__detection__pb2.FraudResponse.FromString,
                 )
-        self.creaditCardEventE = channel.unary_unary(
-                '/hello.FraudService/creaditCardEventE',
+        self.creditCardEventE = channel.unary_unary(
+                '/hello.FraudService/creditCardEventE',
                 request_serializer=fraud__detection__pb2.FraudRequest.SerializeToString,
                 response_deserializer=fraud__detection__pb2.FraudResponse.FromString,
                 )
@@ -46,7 +46,7 @@ class FraudServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def creaditCardEventE(self, request, context):
+    def creditCardEventE(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -65,8 +65,8 @@ def add_FraudServiceServicer_to_server(servicer, server):
                     request_deserializer=fraud__detection__pb2.FraudRequest.FromString,
                     response_serializer=fraud__detection__pb2.FraudResponse.SerializeToString,
             ),
-            'creaditCardEventE': grpc.unary_unary_rpc_method_handler(
-                    servicer.creaditCardEventE,
+            'creditCardEventE': grpc.unary_unary_rpc_method_handler(
+                    servicer.creditCardEventE,
                     request_deserializer=fraud__detection__pb2.FraudRequest.FromString,
                     response_serializer=fraud__detection__pb2.FraudResponse.SerializeToString,
             ),
@@ -115,7 +115,7 @@ class FraudService(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def creaditCardEventE(request,
+    def creditCardEventE(request,
             target,
             options=(),
             channel_credentials=None,
@@ -125,7 +125,7 @@ class FraudService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/hello.FraudService/creaditCardEventE',
+        return grpc.experimental.unary_unary(request, target, '/hello.FraudService/creditCardEventE',
             fraud__detection__pb2.FraudRequest.SerializeToString,
             fraud__detection__pb2.FraudResponse.FromString,
             options, channel_credentials,

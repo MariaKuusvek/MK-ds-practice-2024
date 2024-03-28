@@ -59,6 +59,8 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
         request = transaction_verification.VerificationRequest(orderId = request.orderId, newVC = [0, 0, 0])
 
         response = self.itemsLengthEventA(request)
+
+        logging.info(response)
         return response
 
     
@@ -80,7 +82,7 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
             if verdict == "Fail":
                 response.verdict = "Fail"
                 response.reason = "TransVer Verdict: no items in the cart"
-                response.books = []
+                response.books = ""
                 return response
 
             self.myCurrentVC[1] = self.myCurrentVC[1] + 1 # this should become VCc now
@@ -95,7 +97,7 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
             logging.ERROR("VC ERROR in TransVer in event A!!!")
             response.verdict = "Fail"
             response.reason = "TransVer Verdict: VC error in event A"
-            response.books = []
+            response.books = ""
             return response 
 
 
@@ -120,15 +122,22 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
             if verdict == "Fail":
                 response.verdict = "Fail"
                 response.reason = "TransVer Verdict: incorrect user data"
-                response.books = []
+                response.books = ""
                 return response
         
-
-            self.myCurrentVC[1] = request.newVC[1] + 1 # this should become VCc now
+            temp = self.myCurrentVC[1]
+            self.myCurrentVC = request.newVC # this should become VCc now
+            self.myCurrentVC[1] = temp + 1
 
             logging.info('VC in TransVer in event B is: ' + str(self.myCurrentVC))
 
-            channel = grpc.insecure_channel('localhost:50051')
+    #    with grpc.insecure_channel('fraud_detection:50051') as channel:
+    #        # Create a stub object.
+    #        stub = fraud_detection_grpc.FraudServiceStub(channel)
+    #        # Call the service through the stub object.
+    #        response = stub.startFraudDecMicroService(fraud_detection.FraudThreadRequest(creditCardNr=creditcard, userName = userName, userContact = userContact))
+            
+            channel = grpc.insecure_channel('fraud_detection:50051')
             stub = fraud_detection_grpc.FraudServiceStub(channel)
             request = fraud_detection.FraudRequest(orderId = request.orderId, newVC = self.myCurrentVC)
             response = stub.userDataEventC(request)
@@ -139,16 +148,16 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
             logging.ERROR("VC ERROR in TransVer in event B!!!")
             response.verdict = "Fail"
             response.reason = "TransVer Verdict: VC error in event B"
-            response.books = []
+            response.books = ""
             return response 
     
-    def creditCardEventD(self, request):
+    def creditCardEventD(self, request, context):
 
         response = transaction_verification.VerificationResponse()
 
-        if self.myCurrentVC == [0, 2, 0] & request.newVC == [1, 2, 0]:
+        if (self.myCurrentVC == [0, 2, 0]) & (request.newVC == [1, 2, 0]):
 
-            logging.info("Transaction verification: checking credit card (event B)")
+            logging.info("Transaction verification: checking credit card (event D)")
 
             checkCreditCardNr = len(self.creditcardnr) >= 10
             checkCVVnr = len(self.cvv) == 3 or len(self.cvv) == 4
@@ -166,14 +175,16 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
             if verdict == "Fail":
                 response.verdict = "Fail"
                 response.reason = "TransVer Verdict: incorrect credit card"
-                response.books = []
+                response.books = ""
                 return response
         
-            self.myCurrentVC[1] = request.newVC[1] + 1 # this should become VCc now
+            temp = self.myCurrentVC[1]
+            self.myCurrentVC = request.newVC # this should become VCc now
+            self.myCurrentVC[1] = temp + 1
 
             logging.info('VC in TransVer in event D is: ' + str(self.myCurrentVC))
 
-            channel = grpc.insecure_channel('localhost:50051')
+            channel = grpc.insecure_channel('fraud_detection:50051')
             stub = fraud_detection_grpc.FraudServiceStub(channel)
             request = fraud_detection.FraudRequest(orderId = request.orderId, newVC = self.myCurrentVC)
             response = stub.creditCardEventE(request)
@@ -184,7 +195,7 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
             logging.ERROR("VC ERROR in TransVer in event D!!!")
             response.verdict = "Fail"
             response.reason = "TransVer Verdict: VC error in event D"
-            response.books = []
+            response.books = ""
             return response 
     
 

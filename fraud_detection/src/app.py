@@ -45,27 +45,29 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
         response = fraud_detection.FraudResponse()
         return response
 
-    def userDataEventC(self, request):
+    def userDataEventC(self, request, context):
 
         response = fraud_detection.FraudResponse()
 
-        if self.myCurrentVC == [0, 0, 0] and request.newVC == [0, 2, 0]:
+        if (self.myCurrentVC == [0, 0, 0]) & (request.newVC == [0, 2, 0]):
 
             logging.info("Fraud Detection: checking user data (event C)")
 
-            verdict = self.FraudCheckUserData(self, self.userName, self.userContact) 
+            verdict = self.FraudCheckUserData() 
 
             if verdict == 'Fail':
                 response.verdict = "Fail"
                 response.reason = "FraudDetection Verdict: incorrect user data"
                 response.books = []
-                return response
-
-            self.myCurrentVC[0] = request.newVC[0] + 1 # this should become VCc now
+                return 
+            
+            temp = self.myCurrentVC[0]
+            self.myCurrentVC = request.newVC # this should become VCc now
+            self.myCurrentVC[0] = temp + 1
 
             logging.info('VC in FraudService in event C is: ' + str(self.myCurrentVC))
 
-            channel = grpc.insecure_channel('localhost:50052')
+            channel = grpc.insecure_channel('transaction_verification:50052')
             stub = transaction_verification_grpc.VerificationServiceStub(channel)
             request = transaction_verification.VerificationRequest(orderId = request.orderId, newVC = self.myCurrentVC)
             response = stub.creditCardEventD(request)
@@ -75,29 +77,31 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
             logging.ERROR("VC ERROR in FraudService in event C!!!")
             response.verdict = "Fail"
             response.reason = "FraudDetection Verdict: VC error in event C"
-            response.books = []
+            response.books = ""
             return response 
 
-    def creditCardEventE(self, request):
+    def creditCardEventE(self, request, context):
         response = fraud_detection.FraudResponse()
 
-        if self.myCurrentVC == [1, 2, 0] and request.newVC == [1, 3, 0]:
+        if (self.myCurrentVC == [1, 2, 0]) & (request.newVC == [1, 3, 0]):
 
             logging.info("Fraud Detection: checking credit card (event E)")
 
-            verdict = self.FraudCheckCreditCard(self)
+            verdict = self.FraudCheckCreditCard()
 
             if verdict == 'Fail':
                 response.verdict = "Fail"
                 response.reason = "FraudDetection Verdict: incorrect credit card"
-                response.books = []
+                response.books = ""
                 return response
-
-            self.myCurrentVC[0] = request.newVC[0] + 1 # this should become VCc now
+            
+            temp = self.myCurrentVC[0]
+            self.myCurrentVC = request.newVC # this should become VCc now
+            self.myCurrentVC[0] = temp + 1
 
             logging.info('VC in FraudService in event E is: ' + str(self.myCurrentVC))
 
-            channel = grpc.insecure_channel('localhost:50053')
+            channel = grpc.insecure_channel('suggestions:50053')
             stub = suggestions_grpc.SuggestionsServiceStub(channel)
             request = suggestions.SuggestionsRequest(orderId = request.orderId, newVC = self.myCurrentVC)
             response = stub.bookSuggestionsEventF(request)
@@ -106,7 +110,7 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
         else:
             logging.ERROR("VC ERROR in FraudService in event E!!!")
             response.verdict = "Fail"
-            response.books = []
+            response.books = ""
             return response 
  
  # Create an RPC function for fraud detection logic

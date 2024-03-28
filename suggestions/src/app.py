@@ -41,17 +41,19 @@ class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
         response = suggestions.SuggestionsResponse()
         return response
 
-    def bookSuggestionsEventF(self, request):
+    def bookSuggestionsEventF(self, request, context):
 
         response = suggestions.SuggestionsResponse()
 
-        if self.myCurrentVC == [0, 0, 0] and request.newVC == [2, 3, 0]:
+        if (self.myCurrentVC == [0, 0, 0]) & (request.newVC == [2, 3, 0]):
 
             logging.info("Book Suggestions: choosing books (event F)")
 
             books = self.SuggestionsLogic() # Books as string
 
-            self.myCurrentVC[2] = request.newVC[2] + 1 # this should become VCc now
+            temp = self.myCurrentVC[2]
+            self.myCurrentVC = request.newVC # this should become VCc now
+            self.myCurrentVC[2] = temp + 1
 
             logging.info('VC in BooksSuggestions in event F is: ' + str(self.myCurrentVC))
 
@@ -66,7 +68,7 @@ class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
             logging.ERROR("VC ERROR in BookSuggestions in event F!!!")
             response.verdict = "Fail"
             response.reason = "BookSuggestions Verdict: VC error in event F"
-            response.books = []
+            response.books = ""
             return response 
     
     

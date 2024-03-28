@@ -65,6 +65,8 @@ def transaction_verification_func(itemsL, name, contact, street, city, state, zi
     global response_verdict
     global response_reason
     global response_books
+    logging.info("orchestratoris:")
+    logging.info(response)
     response_verdict = response.verdict
     response_reason = response.reason
     response_books = response.books

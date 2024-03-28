@@ -5,7 +5,7 @@ package hello;
 service FraudService {
     rpc startFraudDecMicroService (FraudThreadRequest) returns (FraudResponse);
     rpc userDataEventC (FraudRequest) returns (FraudResponse);
-    rpc creaditCardEventE (FraudRequest) returns (FraudResponse);
+    rpc creditCardEventE (FraudRequest) returns (FraudResponse);
 }
 
 message FraudRequest {
