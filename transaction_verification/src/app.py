@@ -56,11 +56,13 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
 
         logging.info("Transaction Service started successfully")
 
-        response = self.itemsLengthEventA(self, request.orderID)
+        request = transaction_verification.VerificationRequest(orderId = request.orderId, newVC = [0, 0, 0])
+
+        response = self.itemsLengthEventA(request)
         return response
 
     
-    def itemsLengthEventA(self, orderId):
+    def itemsLengthEventA(self, request):
 
         response = transaction_verification.VerificationResponse()
 
@@ -85,7 +87,9 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
 
             logging.info('VC in TransVer in event A is: ' + str(self.myCurrentVC))
 
-            return self.userDataEventB(self, orderId, self.myCurrentVC) # sync, async, whatever we want
+            request = transaction_verification.VerificationRequest(orderId = request.orderId, newVC = self.myCurrentVC)
+
+            return self.userDataEventB(request) # sync, async, whatever we want
 
         else:
             logging.ERROR("VC ERROR in TransVer in event A!!!")
@@ -95,11 +99,11 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
             return response 
 
 
-    def userDataEventB(self, orderId, newVC):
+    def userDataEventB(self, request):
 
         response = transaction_verification.VerificationResponse()
 
-        if self.myCurrentVC == [0, 1, 0] & newVC == [0, 1, 0]:
+        if (self.myCurrentVC == [0, 1, 0]) & (list(request.newVC) == [0, 1, 0]):
 
             logging.info("Transaction verification: checking user data (event B)")
             # Event logic
@@ -120,13 +124,13 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
                 return response
         
 
-            self.myCurrentVC[1] = newVC[1] + 1 # this should become VCc now
+            self.myCurrentVC[1] = request.newVC[1] + 1 # this should become VCc now
 
             logging.info('VC in TransVer in event B is: ' + str(self.myCurrentVC))
 
             channel = grpc.insecure_channel('localhost:50051')
             stub = fraud_detection_grpc.FraudServiceStub(channel)
-            request = fraud_detection.FraudRequest(orderId = orderId, newVC = self.myCurrentVC)
+            request = fraud_detection.FraudRequest(orderId = request.orderId, newVC = self.myCurrentVC)
             response = stub.userDataEventC(request)
 
             return response
