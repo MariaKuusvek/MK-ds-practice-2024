@@ -38,6 +38,8 @@ class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
         self.myCurrentVC = [0, 0, 0]
 
         logging.info("Suggestions service started successfully")
+        response = suggestions.SuggestionsResponse()
+        return response
 
     def bookSuggestionsEventF(self, request):
 

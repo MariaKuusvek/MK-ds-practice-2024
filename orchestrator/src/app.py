@@ -139,7 +139,7 @@ def checkout():
                                                                                         request.json['creditCard']['number'],
                                                                                         request.json['creditCard']['cvv'],
                                                                                         request.json['creditCard']['expirationDate'],
-                                                                                        orderId))
+                                                                                        str(orderId)))
     thread_books = threading.Thread(target=books_suggestion_func)
 
     # Starting threads

@@ -42,6 +42,8 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
         self.userContact = request.userContact
 
         logging.info("Fraud Detection started successfully")
+        response = fraud_detection.FraudResponse()
+        return response
 
     def userDataEventC(self, request):
 

@@ -37,7 +37,7 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
     cvv = ''
     expirationDate = ''
 
-    def startTransVerMicroService(self, request):
+    def startTransVerMicroService(self, request, context):
 
         response = transaction_verification.VerificationResponse()
 
