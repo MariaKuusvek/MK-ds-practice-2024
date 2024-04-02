@@ -14,8 +14,8 @@ class ExecutorServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.func1 = channel.unary_unary(
-                '/hello.ExecutorService/func1',
+        self.dequeueOrder = channel.unary_unary(
+                '/hello.ExecutorService/dequeueOrder',
                 request_serializer=order__executor__pb2.ExecutorRequest.SerializeToString,
                 response_deserializer=order__executor__pb2.ExecutorResponse.FromString,
                 )
@@ -24,7 +24,7 @@ class ExecutorServiceStub(object):
 class ExecutorServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def func1(self, request, context):
+    def dequeueOrder(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -33,8 +33,8 @@ class ExecutorServiceServicer(object):
 
 def add_ExecutorServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'func1': grpc.unary_unary_rpc_method_handler(
-                    servicer.func1,
+            'dequeueOrder': grpc.unary_unary_rpc_method_handler(
+                    servicer.dequeueOrder,
                     request_deserializer=order__executor__pb2.ExecutorRequest.FromString,
                     response_serializer=order__executor__pb2.ExecutorResponse.SerializeToString,
             ),
@@ -49,7 +49,7 @@ class ExecutorService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def func1(request,
+    def dequeueOrder(request,
             target,
             options=(),
             channel_credentials=None,
@@ -59,7 +59,7 @@ class ExecutorService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/hello.ExecutorService/func1',
+        return grpc.experimental.unary_unary(request, target, '/hello.ExecutorService/dequeueOrder',
             order__executor__pb2.ExecutorRequest.SerializeToString,
             order__executor__pb2.ExecutorResponse.FromString,
             options, channel_credentials,

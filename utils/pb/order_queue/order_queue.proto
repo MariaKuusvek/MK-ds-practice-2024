@@ -4,7 +4,8 @@ package hello;
 
 service QueueService {
     rpc enqueue (QueueRequest) returns (QueueResponse);
-    rpc dequeue (QueueRequestDequeue) returns (QueueResponse);
+    rpc dequeue (QueueRequestDequeue) returns (QueueResponseDequeue);
+    rpc queueHasElements (QueueRequestDequeue) returns (QueueResponse);
 }
 
 message QueueRequest {

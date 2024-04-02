@@ -3,13 +3,12 @@ syntax = "proto3";
 package hello;
 
 service ExecutorService {
-    rpc func1 (ExecutorRequest) returns (ExecutorResponse);
+    rpc dequeueOrder (ExecutorRequest) returns (ExecutorResponse);
 }
 
 message ExecutorRequest {
-    string var = 1;
 }
 
 message ExecutorResponse {
-    string var2 = 1;
+    string verdict = 1;
 }

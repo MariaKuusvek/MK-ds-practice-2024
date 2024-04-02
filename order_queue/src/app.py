@@ -56,13 +56,14 @@ class QueueService(order_queue_grpc.QueueServiceServicer):
                 "country": request.country,
                 "creditcardnr": request.creditcardnr,
                 "cvv": request.cvv,
-                "expirationDate": request.expiraionDate,
+                "expirationDate": request.expirationDate,
             }
         }
 
         self.queue.append(order)
 
-        logging.info ("Order ID", request.orderId, "entered into queue")
+        logging.info("Order ID " +  request.orderId + " entered into queue")
+        logging.info(self.queue)
 
         response = order_queue.QueueResponse()
         response.verdict = "Pass"
@@ -73,10 +74,11 @@ class QueueService(order_queue_grpc.QueueServiceServicer):
         logging.info("Dequeue started")
 
         currentOrder = self.queue.popleft()
-        logging.info ("Order ID", currentOrder["orderId"], "removed from queue")
+        logging.info ("Order ID "  + currentOrder["orderId"] + " removed from queue")
+        
 
         response = order_queue.QueueResponseDequeue()
-        
+
         response.itemsLength = currentOrder["orderInfo"]["itemsLength"]
         response.userName = currentOrder["orderInfo"]["userName"]
         response.street = currentOrder["orderInfo"]["street"]
@@ -90,6 +92,16 @@ class QueueService(order_queue_grpc.QueueServiceServicer):
         response.orderId = currentOrder["orderId"]
 
         return response
+    
+    def queueHasElements(self, request, context):
+        response = order_queue.QueueResponse()
+
+        if not bool(self.queue):
+            response.verdict = "No"
+            return response
+        else:
+            response.verdict = "Yes"
+            return response
 
 def serve():
     # Create a gRPC server
