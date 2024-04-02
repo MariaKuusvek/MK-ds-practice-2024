@@ -161,18 +161,25 @@ def checkout():
     order_status_response = {}
 
     # Creating response based on the results of the microservices
-    if response_verdict != '' and response_reason != '' and response_books != '':
+    if response_verdict != '' and response_reason != '':
         if response_verdict == 'Pass':
+
+            books = response_books.split(";")
+            books_object = []
+            for i in range(len(books)):
+                book_info = books[i].split(",")
+                books_object.append({'bookId': book_info[0], 'title': book_info[1], 'author': book_info[2]})
 
             order_status_response = {
                 'orderId': orderId,
                 'status': 'Order Approved',
-                'suggestedBooks': response_books
+                'suggestedBooks': books_object
             }
         else:
             order_status_response = {
+                'orderId': orderId,
                 'status': 'Order Rejected',
-                'suggestedBooks': response_books
+                'suggestedBooks': []
             }
 
     logging.info('Order status response created')
