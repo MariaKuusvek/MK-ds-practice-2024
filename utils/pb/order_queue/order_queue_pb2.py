@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11order_queue.proto\x12\x05hello\"\xe1\x01\n\x0cQueueRequest\x12\x13\n\x0bitemsLength\x18\x01 \x01(\x05\x12\x10\n\x08userName\x18\x02 \x01(\t\x12\x13\n\x0buserContact\x18\x03 \x01(\t\x12\x0e\n\x06street\x18\x04 \x01(\t\x12\x0c\n\x04\x63ity\x18\x05 \x01(\t\x12\r\n\x05state\x18\x06 \x01(\t\x12\x0b\n\x03zip\x18\x07 \x01(\t\x12\x0f\n\x07\x63ountry\x18\x08 \x01(\t\x12\x14\n\x0c\x63reditcardnr\x18\t \x01(\t\x12\x0b\n\x03\x63vv\x18\n \x01(\t\x12\x16\n\x0e\x65xpirationDate\x18\x0b \x01(\t\x12\x0f\n\x07orderId\x18\x0c \x01(\t\"&\n\x13QueueRequestDequeue\x12\x0f\n\x07orderId\x18\x01 \x01(\t\" \n\rQueueResponse\x12\x0f\n\x07verdict\x18\x01 \x01(\t2\x81\x01\n\x0cQueueService\x12\x34\n\x07\x65nqueue\x12\x13.hello.QueueRequest\x1a\x14.hello.QueueResponse\x12;\n\x07\x64\x65queue\x12\x1a.hello.QueueRequestDequeue\x1a\x14.hello.QueueResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11order_queue.proto\x12\x05hello\"\xe1\x01\n\x0cQueueRequest\x12\x13\n\x0bitemsLength\x18\x01 \x01(\x05\x12\x10\n\x08userName\x18\x02 \x01(\t\x12\x13\n\x0buserContact\x18\x03 \x01(\t\x12\x0e\n\x06street\x18\x04 \x01(\t\x12\x0c\n\x04\x63ity\x18\x05 \x01(\t\x12\r\n\x05state\x18\x06 \x01(\t\x12\x0b\n\x03zip\x18\x07 \x01(\t\x12\x0f\n\x07\x63ountry\x18\x08 \x01(\t\x12\x14\n\x0c\x63reditcardnr\x18\t \x01(\t\x12\x0b\n\x03\x63vv\x18\n \x01(\t\x12\x16\n\x0e\x65xpirationDate\x18\x0b \x01(\t\x12\x0f\n\x07orderId\x18\x0c \x01(\t\"\x15\n\x13QueueRequestDequeue\" \n\rQueueResponse\x12\x0f\n\x07verdict\x18\x01 \x01(\t\"\xe9\x01\n\x14QueueResponseDequeue\x12\x13\n\x0bitemsLength\x18\x01 \x01(\x05\x12\x10\n\x08userName\x18\x02 \x01(\t\x12\x13\n\x0buserContact\x18\x03 \x01(\t\x12\x0e\n\x06street\x18\x04 \x01(\t\x12\x0c\n\x04\x63ity\x18\x05 \x01(\t\x12\r\n\x05state\x18\x06 \x01(\t\x12\x0b\n\x03zip\x18\x07 \x01(\t\x12\x0f\n\x07\x63ountry\x18\x08 \x01(\t\x12\x14\n\x0c\x63reditcardnr\x18\t \x01(\t\x12\x0b\n\x03\x63vv\x18\n \x01(\t\x12\x16\n\x0e\x65xpirationDate\x18\x0b \x01(\t\x12\x0f\n\x07orderId\x18\x0c \x01(\t2\x81\x01\n\x0cQueueService\x12\x34\n\x07\x65nqueue\x12\x13.hello.QueueRequest\x1a\x14.hello.QueueResponse\x12;\n\x07\x64\x65queue\x12\x1a.hello.QueueRequestDequeue\x1a\x14.hello.QueueResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -24,9 +24,11 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_QUEUEREQUEST']._serialized_start=29
   _globals['_QUEUEREQUEST']._serialized_end=254
   _globals['_QUEUEREQUESTDEQUEUE']._serialized_start=256
-  _globals['_QUEUEREQUESTDEQUEUE']._serialized_end=294
-  _globals['_QUEUERESPONSE']._serialized_start=296
-  _globals['_QUEUERESPONSE']._serialized_end=328
-  _globals['_QUEUESERVICE']._serialized_start=331
-  _globals['_QUEUESERVICE']._serialized_end=460
+  _globals['_QUEUEREQUESTDEQUEUE']._serialized_end=277
+  _globals['_QUEUERESPONSE']._serialized_start=279
+  _globals['_QUEUERESPONSE']._serialized_end=311
+  _globals['_QUEUERESPONSEDEQUEUE']._serialized_start=314
+  _globals['_QUEUERESPONSEDEQUEUE']._serialized_end=547
+  _globals['_QUEUESERVICE']._serialized_start=550
+  _globals['_QUEUESERVICE']._serialized_end=679
 # @@protoc_insertion_point(module_scope)

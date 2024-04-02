@@ -31,22 +31,64 @@ import order_queue_pb2_grpc as order_queue_grpc
 
 import grpc
 from concurrent import futures
+from collections import deque
 
 # Create a class to define the server functions, derived from
 # order_queue_pb2_grpc.QueueServiceServicer
 class QueueService(order_queue_grpc.QueueServiceServicer):
+    queue = deque()
+
     # Create an RPC function for queue logic
 
     def enqueue(self, request, context):
-        logging.info("enqueue started successfully")
+        logging.info("Enqueue started")
+
+        order = {
+            "orderId": request.orderId,
+            "orderInfo": {
+                "itemsLength": request.itemsLength,
+                "userName": request.userName,
+                "userContact": request.userContact,
+                "street": request.street,
+                "city": request.city,
+                "state": request.state,
+                "zip": request.zip,
+                "country": request.country,
+                "creditcardnr": request.creditcardnr,
+                "cvv": request.cvv,
+                "expirationDate": request.expiraionDate,
+            }
+        }
+
+        self.queue.append(order)
+
+        logging.info ("Order ID", request.orderId, "entered into queue")
 
         response = order_queue.QueueResponse()
+        response.verdict = "Pass"
+
         return response
 
     def dequeue(self, request, context):
-        logging.info("dequeue started successfully")
+        logging.info("Dequeue started")
 
-        response = order_queue.QueueResponse()
+        currentOrder = self.queue.popleft()
+        logging.info ("Order ID", currentOrder["orderId"], "removed from queue")
+
+        response = order_queue.QueueResponseDequeue()
+        
+        response.itemsLength = currentOrder["orderInfo"]["itemsLength"]
+        response.userName = currentOrder["orderInfo"]["userName"]
+        response.street = currentOrder["orderInfo"]["street"]
+        response.city = currentOrder["orderInfo"]["city"]
+        response.state = currentOrder["orderInfo"]["state"]
+        response.zip = currentOrder["orderInfo"]["zip"]
+        response.country = currentOrder["orderInfo"]["country"]
+        response.creditcardnr = currentOrder["orderInfo"]["creditcardnr"]
+        response.cvv = currentOrder["orderInfo"]["cvv"]
+        response.expirationDate = currentOrder["orderInfo"]["expirationDate"]
+        response.orderId = currentOrder["orderId"]
+
         return response
 
 def serve():
