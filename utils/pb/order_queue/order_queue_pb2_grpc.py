@@ -22,6 +22,11 @@ class QueueServiceStub(object):
         self.dequeue = channel.unary_unary(
                 '/hello.QueueService/dequeue',
                 request_serializer=order__queue__pb2.QueueRequestDequeue.SerializeToString,
+                response_deserializer=order__queue__pb2.QueueResponseDequeue.FromString,
+                )
+        self.queueHasElements = channel.unary_unary(
+                '/hello.QueueService/queueHasElements',
+                request_serializer=order__queue__pb2.QueueRequestDequeue.SerializeToString,
                 response_deserializer=order__queue__pb2.QueueResponse.FromString,
                 )
 
@@ -41,6 +46,12 @@ class QueueServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def queueHasElements(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_QueueServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -51,6 +62,11 @@ def add_QueueServiceServicer_to_server(servicer, server):
             ),
             'dequeue': grpc.unary_unary_rpc_method_handler(
                     servicer.dequeue,
+                    request_deserializer=order__queue__pb2.QueueRequestDequeue.FromString,
+                    response_serializer=order__queue__pb2.QueueResponseDequeue.SerializeToString,
+            ),
+            'queueHasElements': grpc.unary_unary_rpc_method_handler(
+                    servicer.queueHasElements,
                     request_deserializer=order__queue__pb2.QueueRequestDequeue.FromString,
                     response_serializer=order__queue__pb2.QueueResponse.SerializeToString,
             ),
@@ -93,6 +109,23 @@ class QueueService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/hello.QueueService/dequeue',
+            order__queue__pb2.QueueRequestDequeue.SerializeToString,
+            order__queue__pb2.QueueResponseDequeue.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def queueHasElements(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/hello.QueueService/queueHasElements',
             order__queue__pb2.QueueRequestDequeue.SerializeToString,
             order__queue__pb2.QueueResponse.FromString,
             options, channel_credentials,

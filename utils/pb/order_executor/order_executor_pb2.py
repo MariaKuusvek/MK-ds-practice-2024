@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14order_executor.proto\x12\x05hello\"\x1e\n\x0f\x45xecutorRequest\x12\x0b\n\x03var\x18\x01 \x01(\t\" \n\x10\x45xecutorResponse\x12\x0c\n\x04var2\x18\x01 \x01(\t2K\n\x0f\x45xecutorService\x12\x38\n\x05\x66unc1\x12\x16.hello.ExecutorRequest\x1a\x17.hello.ExecutorResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14order_executor.proto\x12\x05hello\"\x11\n\x0f\x45xecutorRequest\"#\n\x10\x45xecutorResponse\x12\x0f\n\x07verdict\x18\x01 \x01(\t2R\n\x0f\x45xecutorService\x12?\n\x0c\x64\x65queueOrder\x12\x16.hello.ExecutorRequest\x1a\x17.hello.ExecutorResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -22,9 +22,9 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'order_executor_pb2', _globa
 if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   _globals['_EXECUTORREQUEST']._serialized_start=31
-  _globals['_EXECUTORREQUEST']._serialized_end=61
-  _globals['_EXECUTORRESPONSE']._serialized_start=63
-  _globals['_EXECUTORRESPONSE']._serialized_end=95
-  _globals['_EXECUTORSERVICE']._serialized_start=97
-  _globals['_EXECUTORSERVICE']._serialized_end=172
+  _globals['_EXECUTORREQUEST']._serialized_end=48
+  _globals['_EXECUTORRESPONSE']._serialized_start=50
+  _globals['_EXECUTORRESPONSE']._serialized_end=85
+  _globals['_EXECUTORSERVICE']._serialized_start=87
+  _globals['_EXECUTORSERVICE']._serialized_end=169
 # @@protoc_insertion_point(module_scope)

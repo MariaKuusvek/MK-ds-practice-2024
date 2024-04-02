@@ -5,13 +5,11 @@ from typing import ClassVar as _ClassVar, Optional as _Optional
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class ExecutorRequest(_message.Message):
-    __slots__ = ("var",)
-    VAR_FIELD_NUMBER: _ClassVar[int]
-    var: str
-    def __init__(self, var: _Optional[str] = ...) -> None: ...
+    __slots__ = ()
+    def __init__(self) -> None: ...
 
 class ExecutorResponse(_message.Message):
-    __slots__ = ("var2",)
-    VAR2_FIELD_NUMBER: _ClassVar[int]
-    var2: str
-    def __init__(self, var2: _Optional[str] = ...) -> None: ...
+    __slots__ = ("verdict",)
+    VERDICT_FIELD_NUMBER: _ClassVar[int]
+    verdict: str
+    def __init__(self, verdict: _Optional[str] = ...) -> None: ...

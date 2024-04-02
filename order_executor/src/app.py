@@ -55,12 +55,16 @@ def serve():
     # Add HelloService
     order_executor_grpc.add_ExecutorServiceServicer_to_server(ExecutorService(), server)
 
-    # Listen on port 50054
-    port = "50055"
+    # Listen on port 50055
+    port = "50056"
     server.add_insecure_port("[::]:" + port)
+
+    #port = "50057"
+    #server.add_insecure_port("[::]:" + port)
     # Start the server
     server.start()
-    logging.info("Executor server started. Listening on port 50055.")
+    logging.info("Executor server started. Listening on port 50056.")
+    #logging.info("Executor server started. Listening on port 50057.")
     # Keep thread alive
     server.wait_for_termination()
 
