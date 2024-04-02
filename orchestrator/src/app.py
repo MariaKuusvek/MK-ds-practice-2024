@@ -23,6 +23,11 @@ sys.path.insert(2, utils_path)
 import suggestions_pb2 as suggestions
 import suggestions_pb2_grpc as suggestions_grpc
 
+utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/order_queue'))
+sys.path.insert(2, utils_path)
+import order_queue_pb2 as order_queue
+import order_queue_pb2_grpc as order_queue_grpc
+
 import grpc
 
 response_verdict = ''
@@ -79,6 +84,25 @@ def books_suggestion_func():
         stub = suggestions_grpc.SuggestionsServiceStub(channel)
         # Call the service through the stub object.
         response = stub.startBookSuggestionsMicroService(suggestions.SuggestionsThreadRequest())
+
+def order_queue_func(itemsL, name, contact, street, city, state, zip, country, ccnr, cvv, expdate, orderId):
+    # Establish a connection with the order queue gRPC service.
+    with grpc.insecure_channel('order_queue:50054') as channel:
+        # Create a stub object.
+        stub = order_queue_grpc.QueueServiceStub(channel)
+        # Call the service through the stub object.
+        response = stub.enqueue(order_queue.QueueRequest(itemsLength=itemsL,
+                                                            userName = name,
+                                                            userContact = contact,
+                                                            street = street,
+                                                            city = city,
+                                                            state = state,
+                                                            zip = zip,
+                                                            country = country,
+                                                            creditcardnr = ccnr,
+                                                            cvv = cvv,
+                                                            expirationDate = expdate,
+                                                            orderId = orderId))
 
 
 
@@ -157,6 +181,21 @@ def checkout():
     thread_books.join()
 
     logging.info('Threads in orchestrator finished')
+
+    # Putting the verified order into a queue
+    order_queue_func(len(request.json['items']),
+                        request.json['user']['name'],
+                        request.json['user']['contact'],
+                        request.json['billingAddress']['street'],
+                        request.json['billingAddress']['city'],
+                        request.json['billingAddress']['state'],
+                        request.json['billingAddress']['zip'],
+                        request.json['billingAddress']['country'],
+                        request.json['creditCard']['number'],
+                        request.json['creditCard']['cvv'],
+                        request.json['creditCard']['expirationDate'],
+                        str(orderId))
+
 
     order_status_response = {}
 
