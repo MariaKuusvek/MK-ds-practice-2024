@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package hello;
+
+service ExecutorService {
+    rpc func1 (ExecutorRequest) returns (ExecutorResponse);
+}
+
+message ExecutorRequest {
+    string var = 1;
+}
+
+message ExecutorResponse {
+    string var2 = 1;
+}

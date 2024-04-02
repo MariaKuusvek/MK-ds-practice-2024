@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package hello;
+
+service QueueService {
+    rpc enqueue (QueueRequest) returns (QueueResponse);
+    rpc dequeue (QueueRequestDequeue) returns (QueueResponse);
+}
+
+message QueueRequest {
+    int32 itemsLength = 1;
+    string userName = 2;
+    string userContact = 3;
+    string street = 4;
+    string city = 5;
+    string state = 6;
+    string zip = 7;
+    string country = 8;
+    string creditcardnr = 9;
+    string cvv = 10;
+    string expirationDate = 11;
+    string orderId = 12;
+}
+
+message QueueRequestDequeue {
+    string orderId = 1;
+}
+
+message QueueResponse {
+    string verdict = 1;
+}
