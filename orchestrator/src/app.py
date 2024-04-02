@@ -182,26 +182,25 @@ def checkout():
 
     logging.info('Threads in orchestrator finished')
 
-    # Putting the verified order into a queue
-    order_queue_func(len(request.json['items']),
-                        request.json['user']['name'],
-                        request.json['user']['contact'],
-                        request.json['billingAddress']['street'],
-                        request.json['billingAddress']['city'],
-                        request.json['billingAddress']['state'],
-                        request.json['billingAddress']['zip'],
-                        request.json['billingAddress']['country'],
-                        request.json['creditCard']['number'],
-                        request.json['creditCard']['cvv'],
-                        request.json['creditCard']['expirationDate'],
-                        str(orderId))
-
-
     order_status_response = {}
 
     # Creating response based on the results of the microservices
     if response_verdict != '' and response_reason != '':
         if response_verdict == 'Pass':
+
+            # Putting the verified order into a queue
+            order_queue_func(len(request.json['items']),
+                                request.json['user']['name'],
+                                request.json['user']['contact'],
+                                request.json['billingAddress']['street'],
+                                request.json['billingAddress']['city'],
+                                request.json['billingAddress']['state'],
+                                request.json['billingAddress']['zip'],
+                                request.json['billingAddress']['country'],
+                                request.json['creditCard']['number'],
+                                request.json['creditCard']['cvv'],
+                                request.json['creditCard']['expirationDate'],
+                                str(orderId))
 
             books = response_books.split(";")
             books_object = []
