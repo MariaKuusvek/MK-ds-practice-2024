@@ -131,12 +131,6 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
 
             logging.info('VC in TransVer in event B is: ' + str(self.myCurrentVC))
 
-    #    with grpc.insecure_channel('fraud_detection:50051') as channel:
-    #        # Create a stub object.
-    #        stub = fraud_detection_grpc.FraudServiceStub(channel)
-    #        # Call the service through the stub object.
-    #        response = stub.startFraudDecMicroService(fraud_detection.FraudThreadRequest(creditCardNr=creditcard, userName = userName, userContact = userContact))
-            
             channel = grpc.insecure_channel('fraud_detection:50051')
             stub = fraud_detection_grpc.FraudServiceStub(channel)
             request = fraud_detection.FraudRequest(orderId = request.orderId, newVC = self.myCurrentVC)

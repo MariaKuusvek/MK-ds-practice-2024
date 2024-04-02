@@ -37,17 +37,22 @@ from concurrent import futures
 class ExecutorService(order_executor_grpc.ExecutorServiceServicer):
     # Create an RPC function for queue logic
 
-    def func1(self, request, context):
-        logging.info("func1 started successfully")
+    def dequeueOrder(self, request, context):
+        logging.info("Dequeuing started in executor")
 
         response = order_executor.ExecutorResponse()
-        return response
 
-    def func2(self, request, context):
-        logging.info("func2 started successfully")
+        channel = grpc.insecure_channel('order_queue:50054')
+        stub = order_executor.QueueServiceStub(channel)
+        request = order_executor_grpc.QueueRequest()
+        response = stub.dequeue(request)
 
-        response = order_executor.ExecutorResponse()
+        logging.info("Order is being executed…")
+
+        response.verdict = "Order executed"
+
         return response
+    
 
 def serve():
     # Create a gRPC server
