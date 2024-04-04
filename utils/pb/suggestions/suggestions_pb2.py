@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11suggestions.proto\x12\x05hello\"4\n\x12SuggestionsRequest\x12\x0f\n\x07orderId\x18\x01 \x01(\t\x12\r\n\x05newVC\x18\x02 \x03(\x05\"\x1a\n\x18SuggestionsThreadRequest\"E\n\x13SuggestionsResponse\x12\x0f\n\x07verdict\x18\x01 \x01(\t\x12\x0e\n\x06reason\x18\x02 \x01(\t\x12\r\n\x05\x62ooks\x18\x03 \x01(\t2\xc5\x01\n\x12SuggestionsService\x12_\n startBookSuggestionsMicroService\x12\x1f.hello.SuggestionsThreadRequest\x1a\x1a.hello.SuggestionsResponse\x12N\n\x15\x62ookSuggestionsEventF\x12\x19.hello.SuggestionsRequest\x1a\x1a.hello.SuggestionsResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11suggestions.proto\x12\x05hello\"4\n\x12SuggestionsRequest\x12\x0f\n\x07orderId\x18\x01 \x01(\t\x12\r\n\x05newVC\x18\x02 \x03(\x05\"\x1a\n\x18SuggestionsThreadRequest\"\x1a\n\x18SuggestionsDeleteRequest\"\x1b\n\x19SuggestionsDeleteResponse\"E\n\x13SuggestionsResponse\x12\x0f\n\x07verdict\x18\x01 \x01(\t\x12\x0e\n\x06reason\x18\x02 \x01(\t\x12\r\n\x05\x62ooks\x18\x03 \x01(\t2\x96\x02\n\x12SuggestionsService\x12_\n startBookSuggestionsMicroService\x12\x1f.hello.SuggestionsThreadRequest\x1a\x1a.hello.SuggestionsResponse\x12N\n\x15\x62ookSuggestionsEventF\x12\x19.hello.SuggestionsRequest\x1a\x1a.hello.SuggestionsResponse\x12O\n\ndeleteData\x12\x1f.hello.SuggestionsDeleteRequest\x1a .hello.SuggestionsDeleteResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -25,8 +25,12 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_SUGGESTIONSREQUEST']._serialized_end=80
   _globals['_SUGGESTIONSTHREADREQUEST']._serialized_start=82
   _globals['_SUGGESTIONSTHREADREQUEST']._serialized_end=108
-  _globals['_SUGGESTIONSRESPONSE']._serialized_start=110
-  _globals['_SUGGESTIONSRESPONSE']._serialized_end=179
-  _globals['_SUGGESTIONSSERVICE']._serialized_start=182
-  _globals['_SUGGESTIONSSERVICE']._serialized_end=379
+  _globals['_SUGGESTIONSDELETEREQUEST']._serialized_start=110
+  _globals['_SUGGESTIONSDELETEREQUEST']._serialized_end=136
+  _globals['_SUGGESTIONSDELETERESPONSE']._serialized_start=138
+  _globals['_SUGGESTIONSDELETERESPONSE']._serialized_end=165
+  _globals['_SUGGESTIONSRESPONSE']._serialized_start=167
+  _globals['_SUGGESTIONSRESPONSE']._serialized_end=236
+  _globals['_SUGGESTIONSSERVICE']._serialized_start=239
+  _globals['_SUGGESTIONSSERVICE']._serialized_end=517
 # @@protoc_insertion_point(module_scope)

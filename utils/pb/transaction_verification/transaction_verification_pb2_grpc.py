@@ -24,6 +24,16 @@ class VerificationServiceStub(object):
                 request_serializer=transaction__verification__pb2.VerificationRequest.SerializeToString,
                 response_deserializer=transaction__verification__pb2.VerificationResponse.FromString,
                 )
+        self.deleteDataInMicroservices = channel.unary_unary(
+                '/hello.VerificationService/deleteDataInMicroservices',
+                request_serializer=transaction__verification__pb2.VerificationDeleteRequest.SerializeToString,
+                response_deserializer=transaction__verification__pb2.VerificationDeleteResponse.FromString,
+                )
+        self.deleteData = channel.unary_unary(
+                '/hello.VerificationService/deleteData',
+                request_serializer=transaction__verification__pb2.VerificationDeleteRequest.SerializeToString,
+                response_deserializer=transaction__verification__pb2.VerificationDeleteResponse.FromString,
+                )
 
 
 class VerificationServiceServicer(object):
@@ -41,6 +51,18 @@ class VerificationServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def deleteDataInMicroservices(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def deleteData(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_VerificationServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -53,6 +75,16 @@ def add_VerificationServiceServicer_to_server(servicer, server):
                     servicer.creditCardEventD,
                     request_deserializer=transaction__verification__pb2.VerificationRequest.FromString,
                     response_serializer=transaction__verification__pb2.VerificationResponse.SerializeToString,
+            ),
+            'deleteDataInMicroservices': grpc.unary_unary_rpc_method_handler(
+                    servicer.deleteDataInMicroservices,
+                    request_deserializer=transaction__verification__pb2.VerificationDeleteRequest.FromString,
+                    response_serializer=transaction__verification__pb2.VerificationDeleteResponse.SerializeToString,
+            ),
+            'deleteData': grpc.unary_unary_rpc_method_handler(
+                    servicer.deleteData,
+                    request_deserializer=transaction__verification__pb2.VerificationDeleteRequest.FromString,
+                    response_serializer=transaction__verification__pb2.VerificationDeleteResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -95,5 +127,39 @@ class VerificationService(object):
         return grpc.experimental.unary_unary(request, target, '/hello.VerificationService/creditCardEventD',
             transaction__verification__pb2.VerificationRequest.SerializeToString,
             transaction__verification__pb2.VerificationResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def deleteDataInMicroservices(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/hello.VerificationService/deleteDataInMicroservices',
+            transaction__verification__pb2.VerificationDeleteRequest.SerializeToString,
+            transaction__verification__pb2.VerificationDeleteResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def deleteData(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/hello.VerificationService/deleteData',
+            transaction__verification__pb2.VerificationDeleteRequest.SerializeToString,
+            transaction__verification__pb2.VerificationDeleteResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

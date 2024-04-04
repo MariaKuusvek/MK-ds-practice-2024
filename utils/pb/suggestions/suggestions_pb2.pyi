@@ -17,6 +17,14 @@ class SuggestionsThreadRequest(_message.Message):
     __slots__ = ()
     def __init__(self) -> None: ...
 
+class SuggestionsDeleteRequest(_message.Message):
+    __slots__ = ()
+    def __init__(self) -> None: ...
+
+class SuggestionsDeleteResponse(_message.Message):
+    __slots__ = ()
+    def __init__(self) -> None: ...
+
 class SuggestionsResponse(_message.Message):
     __slots__ = ("verdict", "reason", "books")
     VERDICT_FIELD_NUMBER: _ClassVar[int]

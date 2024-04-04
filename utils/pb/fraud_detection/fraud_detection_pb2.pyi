@@ -23,6 +23,14 @@ class FraudThreadRequest(_message.Message):
     userContact: str
     def __init__(self, creditCardNr: _Optional[str] = ..., userName: _Optional[str] = ..., userContact: _Optional[str] = ...) -> None: ...
 
+class FraudDeleteRequest(_message.Message):
+    __slots__ = ()
+    def __init__(self) -> None: ...
+
+class FraudDeleteResponse(_message.Message):
+    __slots__ = ()
+    def __init__(self) -> None: ...
+
 class FraudResponse(_message.Message):
     __slots__ = ("verdict", "reason", "books")
     VERDICT_FIELD_NUMBER: _ClassVar[int]

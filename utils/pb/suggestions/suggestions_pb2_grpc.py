@@ -24,6 +24,11 @@ class SuggestionsServiceStub(object):
                 request_serializer=suggestions__pb2.SuggestionsRequest.SerializeToString,
                 response_deserializer=suggestions__pb2.SuggestionsResponse.FromString,
                 )
+        self.deleteData = channel.unary_unary(
+                '/hello.SuggestionsService/deleteData',
+                request_serializer=suggestions__pb2.SuggestionsDeleteRequest.SerializeToString,
+                response_deserializer=suggestions__pb2.SuggestionsDeleteResponse.FromString,
+                )
 
 
 class SuggestionsServiceServicer(object):
@@ -41,6 +46,12 @@ class SuggestionsServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def deleteData(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_SuggestionsServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -53,6 +64,11 @@ def add_SuggestionsServiceServicer_to_server(servicer, server):
                     servicer.bookSuggestionsEventF,
                     request_deserializer=suggestions__pb2.SuggestionsRequest.FromString,
                     response_serializer=suggestions__pb2.SuggestionsResponse.SerializeToString,
+            ),
+            'deleteData': grpc.unary_unary_rpc_method_handler(
+                    servicer.deleteData,
+                    request_deserializer=suggestions__pb2.SuggestionsDeleteRequest.FromString,
+                    response_serializer=suggestions__pb2.SuggestionsDeleteResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -95,5 +111,22 @@ class SuggestionsService(object):
         return grpc.experimental.unary_unary(request, target, '/hello.SuggestionsService/bookSuggestionsEventF',
             suggestions__pb2.SuggestionsRequest.SerializeToString,
             suggestions__pb2.SuggestionsResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def deleteData(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/hello.SuggestionsService/deleteData',
+            suggestions__pb2.SuggestionsDeleteRequest.SerializeToString,
+            suggestions__pb2.SuggestionsDeleteResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
