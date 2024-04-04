@@ -74,11 +74,20 @@ class QueueService(order_queue_grpc.QueueServiceServicer):
             self.queue.append(order)
         else:
             logging.info("Queue is not empty:")
+            inx = -1
 
             for previousOrder in self.queue:
+                logging.info(previousOrder)
+                logging.info(previousOrder["distance"])
+                logging.info(distance)
                 if previousOrder["distance"] > distance:
+                    logging.info("previous is bigger!")
                     inx = self.queue.index(previousOrder)
-            self.queue.insert(inx, order)
+                    logging.info(inx)
+            if inx == -1:
+                self.queue.append(order)
+            else:
+                self.queue.insert(inx, order)
 
         logging.info("Order ID " +  request.orderId + " entered into queue")
         logging.info(self.queue)
