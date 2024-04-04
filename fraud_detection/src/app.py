@@ -63,7 +63,7 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
 
                 response.verdict = "Fail"
                 response.reason = "FraudDetection Verdict: incorrect user data"
-                response.books = []
+                response.books = ""
                 return 
             
             temp = self.myCurrentVC[0]
@@ -134,23 +134,29 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
             return response 
         
  
- # Create an RPC function for fraud detection logic
     def FraudCheckUserData(self):
 
-        # Greeting message
         logging.info('Fraud Detection: checking User Data')
+        
+        indexName = self.userName.find(' ')
+        # Cheking that the name has space in it.
+        if indexName != -1:
+            # Checking that the user contact has the character '@'.
+            indexContaxt = self.userContact.find('@')
+            if indexContaxt != -1:
+                verdict = "Pass"
+            else:
+                verdict = "Fail"
+        else:
+            verdict = "Fail"
 
-        ## We need some dummy logic
+        logging.info("Fraud Logic verdict: " + verdict)
+        return verdict
 
-        return "Pass"
 
-
-    # Create an RPC function for fraud detection logic
     def FraudCheckCreditCard(self):
-        # Create a FraudResponse object
 
-        # Greeting message
-        logging.info('Hello from the Fraud Detection microservice')
+        logging.info('Fraud Detection: checking cre')
 
         # Checking that the credit card number is not made up only one number.
         for i in range(1, len(self.creditCardNr)):
@@ -171,7 +177,7 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
         response = stub.deleteData(request)
 
         channel = grpc.insecure_channel('suggestions:50053')
-        stub = suggestions_grpc.FraudServiceStub(channel)
+        stub = suggestions_grpc.SuggestionsServiceStub(channel)
         request = suggestions.SuggestionsDeleteRequest()
         response = stub.deleteData(request)
 

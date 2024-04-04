@@ -231,12 +231,12 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
         channel = grpc.insecure_channel('fraud_detection:50051')
         stub = fraud_detection_grpc.FraudServiceStub(channel)
         request = fraud_detection.FraudDeleteRequest()
-        stub.deleteData(request)
+        response = stub.deleteData(request)
 
         channel = grpc.insecure_channel('suggestions:50053')
         stub = suggestions_grpc.SuggestionsServiceStub(channel)
         request = suggestions.SuggestionsDeleteRequest()
-        stub.deleteData(request)
+        response = stub.deleteData(request)
 
         self.myCurrentVC = []
         self.itemsLength = 0
