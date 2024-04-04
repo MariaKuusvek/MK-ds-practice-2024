@@ -227,19 +227,31 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
             return response 
         
 
-    def deleteDataInMicroservices(self, request, context):
+    def deleteDataInMicroservices(self, request):
         channel = grpc.insecure_channel('fraud_detection:50051')
         stub = fraud_detection_grpc.FraudServiceStub(channel)
         request = fraud_detection.FraudDeleteRequest()
-        response = stub.deleteData(request)
+        stub.deleteData(request)
 
         channel = grpc.insecure_channel('suggestions:50053')
-        stub = suggestions_grpc.FraudServiceStub(channel)
+        stub = suggestions_grpc.SuggestionsServiceStub(channel)
         request = suggestions.SuggestionsDeleteRequest()
-        response = stub.deleteData(request)
+        stub.deleteData(request)
 
-        request = transaction_verification.VerificationDeleteRequest()
-        self.deleteData(request)
+        self.myCurrentVC = []
+        self.itemsLength = 0
+        self.userName = ''
+        self.userContact = ''
+        self.street = ''
+        self.city = ''
+        self.state = ''
+        self.zip = ''
+        self.country = ''
+        self.creditcardnr = ''
+        self.cvv = ''
+        self.expirationDate = ''
+
+        logging.info("Data deleted from microservices")
 
 
     def deleteData(self, request, context):
@@ -256,6 +268,7 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
         self.creditcardnr = ''
         self.cvv = ''
         self.expirationDate = ''
+        return transaction_verification.VerificationDeleteResponse()
 
 
     

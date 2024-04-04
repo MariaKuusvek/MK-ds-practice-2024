@@ -44,3 +44,10 @@ frontend service:
 - node.js, npm (or any other package manager)
 
 And then run each service individually.
+
+
+### OSMNX Library
+```bash
+pip install osmnx
+docker compose up --build
+```

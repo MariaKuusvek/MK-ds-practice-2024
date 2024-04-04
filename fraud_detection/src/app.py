@@ -175,8 +175,12 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
         request = suggestions.SuggestionsDeleteRequest()
         response = stub.deleteData(request)
 
-        request = transaction_verification.VerificationDeleteRequest()
-        self.deleteData(request)
+        self.myCurrentVC = []
+        self.creditCardNr = ''
+        self.userName = ''
+        self.userContact = ''
+
+        logging.info("Data deleted from microservices")
     
     def deleteData(self, request, context):
 
@@ -184,6 +188,7 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
         self.creditCardNr = ''
         self.userName = ''
         self.userContact = ''
+        return fraud_detection.FraudDeleteResponse()
 
 
 

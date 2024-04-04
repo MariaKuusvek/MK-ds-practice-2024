@@ -97,6 +97,7 @@ class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
 
     def deleteData(self, request, context):
         self.myCurrentVC = []
+        return suggestions.SuggestionsDeleteResponse()
     
 
 

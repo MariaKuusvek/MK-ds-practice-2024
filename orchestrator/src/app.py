@@ -255,6 +255,7 @@ def checkout():
         if response_verdict == 'Pass':
 
             # Putting the verified order into a queue
+            '''
             order_queue_func(len(request.json['items']),
                                 request.json['user']['name'],
                                 request.json['user']['contact'],
@@ -266,7 +267,7 @@ def checkout():
                                 request.json['creditCard']['number'],
                                 request.json['creditCard']['cvv'],
                                 request.json['creditCard']['expirationDate'],
-                                str(orderId))
+                                str(orderId))'''
 
             books = response_books.split(";")
             books_object = []
