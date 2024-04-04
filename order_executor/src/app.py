@@ -52,14 +52,14 @@ class ExecutorService(order_executor_grpc.ExecutorServiceServicer):
         response = order_executor.ExecutorResponse()
 
         channel = grpc.insecure_channel('order_queue:50054')
-        stub = order_queue.QueueServiceStub(channel)
-        request = order_queue_grpc.QueueRequest()
+        stub = order_queue_grpc.QueueServiceStub(channel)
+        request = order_queue.QueueRequest()
         response = stub.queueHasElements(request)
 
         if response.verdict == "Yes":
             channel = grpc.insecure_channel('order_queue:50054')
-            stub = order_queue.QueueServiceStub(channel)
-            request = order_queue_grpc.QueueRequest()
+            stub = order_queue_grpc.QueueServiceStub(channel)
+            request = order_queue.QueueRequest()
             response = stub.dequeue(request)
             
             logging.info("Order is being executed…")

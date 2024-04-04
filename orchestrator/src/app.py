@@ -201,7 +201,7 @@ def checkout():
 
     logging.info('Checkout REST started')
 
-    startLeaderElection()
+    #startLeaderElection()
    
     # Print request object data
     print("Request Data:", request.json)
