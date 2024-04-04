@@ -56,6 +56,11 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
             verdict = self.FraudCheckUserData() 
 
             if verdict == 'Fail':
+
+                # Deleting data in microservices
+                request = fraud_detection.FraudDeleteRequest()
+                self.deleteDataInMicroservices(request)
+
                 response.verdict = "Fail"
                 response.reason = "FraudDetection Verdict: incorrect user data"
                 response.books = []
@@ -74,6 +79,11 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
             return response
 
         else:
+
+            # Deleting data in microservices
+            request = fraud_detection.FraudDeleteRequest()
+            self.deleteDataInMicroservices(request)
+
             logging.ERROR("VC ERROR in FraudService in event C!!!")
             response.verdict = "Fail"
             response.reason = "FraudDetection Verdict: VC error in event C"
@@ -90,6 +100,11 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
             verdict = self.FraudCheckCreditCard()
 
             if verdict == 'Fail':
+
+                # Deleting data in microservices
+                request = fraud_detection.FraudDeleteRequest()
+                self.deleteDataInMicroservices(request)
+
                 response.verdict = "Fail"
                 response.reason = "FraudDetection Verdict: incorrect credit card"
                 response.books = ""
@@ -108,10 +123,16 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
             return response
 
         else:
+
+            # Deleting data in microservices
+            request = fraud_detection.FraudDeleteRequest()
+            self.deleteDataInMicroservices(request)
+
             logging.ERROR("VC ERROR in FraudService in event E!!!")
             response.verdict = "Fail"
             response.books = ""
             return response 
+        
  
  # Create an RPC function for fraud detection logic
     def FraudCheckUserData(self):
@@ -141,6 +162,31 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
         
         logging.info("Fraud Logic verdict: " + verdict)
         return verdict
+    
+    
+    def deleteDataInMicroservices(self, request):
+        channel = grpc.insecure_channel('transaction_verification:50052')
+        stub = transaction_verification_grpc.VerificationServiceStub(channel)
+        request = transaction_verification.VerificationDeleteRequest()
+        response = stub.deleteData(request)
+
+        channel = grpc.insecure_channel('suggestions:50053')
+        stub = suggestions_grpc.FraudServiceStub(channel)
+        request = suggestions.SuggestionsDeleteRequest()
+        response = stub.deleteData(request)
+
+        request = transaction_verification.VerificationDeleteRequest()
+        self.deleteData(request)
+    
+    def deleteData(self, request, context):
+
+        self.myCurrentVC = []
+        self.creditCardNr = ''
+        self.userName = ''
+        self.userContact = ''
+
+
+
     
 def serve():
     # Create a gRPC server

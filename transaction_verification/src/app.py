@@ -20,6 +20,12 @@ sys.path.insert(0, utils_path)
 import fraud_detection_pb2 as fraud_detection
 import fraud_detection_pb2_grpc as fraud_detection_grpc
 
+utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/suggestions'))
+sys.path.insert(2, utils_path)
+import suggestions_pb2 as suggestions
+import suggestions_pb2_grpc as suggestions_grpc
+
+
 # Create a class to define the server functions, derived from
 # transaction_verification_pb2_grpc.VerificationServiceServicer
 class VerificationService(transaction_verification_grpc.VerificationServiceServicer):
@@ -76,24 +82,33 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
                 logging.info("Transaction verification verdict: Pass")
                 verdict = "Pass"
             else:
-                logging.info("Transaction verification verdict: Pass")
+                logging.info("Transaction verification verdict: Fail")
                 verdict = "Fail"
 
             if verdict == "Fail":
+
+                # Deleting data in microservices
+                request = transaction_verification.VerificationDeleteRequest()
+                self.deleteDataInMicroservices(request)
+
+                # Return fail response
                 response.verdict = "Fail"
                 response.reason = "TransVer Verdict: no items in the cart"
                 response.books = ""
                 return response
 
             self.myCurrentVC[1] = self.myCurrentVC[1] + 1 # this should become VCc now
-
             logging.info('VC in TransVer in event A is: ' + str(self.myCurrentVC))
 
             request = transaction_verification.VerificationRequest(orderId = request.orderId, newVC = self.myCurrentVC)
-
             return self.userDataEventB(request) # sync, async, whatever we want
 
         else:
+
+            # Deleting data in microservices
+            request = transaction_verification.VerificationDeleteRequest()
+            self.deleteDataInMicroservices(request)
+
             logging.ERROR("VC ERROR in TransVer in event A!!!")
             response.verdict = "Fail"
             response.reason = "TransVer Verdict: VC error in event A"
@@ -116,10 +131,15 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
                 logging.info("Transaction verification verdict: Pass")
                 verdict = "Pass"
             else:
-                logging.info("Transaction verification verdict: Pass")
+                logging.info("Transaction verification verdict: Fail")
                 verdict = "Fail"
 
             if verdict == "Fail":
+
+                # Deleting data in microservices
+                request = transaction_verification.VerificationDeleteRequest()
+                self.deleteDataInMicroservices(request)
+
                 response.verdict = "Fail"
                 response.reason = "TransVer Verdict: incorrect user data"
                 response.books = ""
@@ -128,7 +148,6 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
             temp = self.myCurrentVC[1]
             self.myCurrentVC = request.newVC # this should become VCc now
             self.myCurrentVC[1] = temp + 1
-
             logging.info('VC in TransVer in event B is: ' + str(self.myCurrentVC))
 
             channel = grpc.insecure_channel('fraud_detection:50051')
@@ -139,6 +158,11 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
             return response
         
         else:
+
+            # Deleting data in microservices
+            request = transaction_verification.VerificationDeleteRequest()
+            self.deleteDataInMicroservices(request)
+
             logging.ERROR("VC ERROR in TransVer in event B!!!")
             response.verdict = "Fail"
             response.reason = "TransVer Verdict: VC error in event B"
@@ -163,10 +187,15 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
                 logging.info("Transaction verification verdict: Pass")
                 verdict = "Pass"
             else:
-                logging.info("Transaction verification verdict: Pass")
+                logging.info("Transaction verification verdict: Fail")
                 verdict = "Fail"
 
             if verdict == "Fail":
+
+                # Deleting data in microservices
+                request = transaction_verification.VerificationDeleteRequest()
+                self.deleteDataInMicroservices(request)
+
                 response.verdict = "Fail"
                 response.reason = "TransVer Verdict: incorrect credit card"
                 response.books = ""
@@ -186,14 +215,49 @@ class VerificationService(transaction_verification_grpc.VerificationServiceServi
             return response
 
         else:
+
+            # Deleting data in microservices
+            request = transaction_verification.VerificationDeleteRequest()
+            self.deleteDataInMicroservices(request)
+
             logging.ERROR("VC ERROR in TransVer in event D!!!")
             response.verdict = "Fail"
             response.reason = "TransVer Verdict: VC error in event D"
             response.books = ""
             return response 
-    
+        
 
-       
+    def deleteDataInMicroservices(self, request, context):
+        channel = grpc.insecure_channel('fraud_detection:50051')
+        stub = fraud_detection_grpc.FraudServiceStub(channel)
+        request = fraud_detection.FraudDeleteRequest()
+        response = stub.deleteData(request)
+
+        channel = grpc.insecure_channel('suggestions:50053')
+        stub = suggestions_grpc.FraudServiceStub(channel)
+        request = suggestions.SuggestionsDeleteRequest()
+        response = stub.deleteData(request)
+
+        request = transaction_verification.VerificationDeleteRequest()
+        self.deleteData(request)
+
+
+    def deleteData(self, request, context):
+
+        self.myCurrentVC = []
+        self.itemsLength = 0
+        self.userName = ''
+        self.userContact = ''
+        self.street = ''
+        self.city = ''
+        self.state = ''
+        self.zip = ''
+        self.country = ''
+        self.creditcardnr = ''
+        self.cvv = ''
+        self.expirationDate = ''
+
+
     
 def serve():
     # Create a gRPC server

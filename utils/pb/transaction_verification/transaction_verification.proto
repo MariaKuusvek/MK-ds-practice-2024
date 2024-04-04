@@ -5,6 +5,8 @@ package hello;
 service VerificationService {
     rpc startTransVerMicroService (VerificationThreadRequest) returns (VerificationResponse);
     rpc creditCardEventD (VerificationRequest) returns (VerificationResponse); 
+    rpc deleteDataInMicroservices(VerificationDeleteRequest) return (VerificationDeleteResponse)
+    rpc deleteData (VerificationDeleteRequest) return (VerificationDeleteResponse)
 }
 
 message VerificationRequest{
@@ -25,6 +27,12 @@ message VerificationThreadRequest {
     string cvv = 10;
     string expirationDate = 11;
     string orderId = 12;
+}
+
+message VerificationDeleteRequest {
+}
+
+message VerificationDeleteResponse {
 }
 
 message VerificationResponse {
