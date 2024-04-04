@@ -2,6 +2,7 @@ import sys
 import os
 import threading
 import logging
+import time
 logging.basicConfig(level=logging.DEBUG)
 
 # This set of lines are needed to import the gRPC stubs.
@@ -28,15 +29,17 @@ sys.path.insert(2, utils_path)
 import order_queue_pb2 as order_queue
 import order_queue_pb2_grpc as order_queue_grpc
 
+utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/order_executor'))
+sys.path.insert(2, utils_path)
+import order_executor_pb2 as order_executor
+import order_executor_pb2_grpc as order_executor_grpc
+
 import grpc
 
 response_verdict = ''
 response_reason = ''
 response_books = ''
 
-
-def greet():
-    print("hello")
 
 def fraud_detection_func(creditcard, userName, userContact):
     # Establish a connection with the fraud-detection gRPC service.
@@ -103,7 +106,63 @@ def order_queue_func(itemsL, name, contact, street, city, state, zip, country, c
                                                             cvv = cvv,
                                                             expirationDate = expdate,
                                                             orderId = orderId))
+        
+def startLeaderElection():
 
+    logging.info("Started leader election.")
+
+    responses = []
+
+    with grpc.insecure_channel('order_executor_1:50056') as channel:
+        # Create a stub object.
+        stub = order_executor_grpc.ExecutorServiceStub(channel)
+        # Call the service through the stub object.
+        response_1 = stub.executorAlive(order_executor.ExecutorRequest())
+        responses.append(response_1.verdict)
+
+    with grpc.insecure_channel('order_executor_2:50057') as channel:
+        # Create a stub object.
+        stub = order_executor_grpc.ExecutorServiceStub(channel)
+        # Call the service through the stub object.
+        response_2 = stub.executorAlive(order_executor.ExecutorRequest())
+        responses.append(response_2.verdict)
+
+    with grpc.insecure_channel('order_executor_3:50058') as channel:
+        # Create a stub object.
+        stub = order_executor_grpc.ExecutorServiceStub(channel)
+        # Call the service through the stub object.
+        response_3 = stub.executorAlive(order_executor.ExecutorRequest())
+        responses.append(response_3.verdict)
+
+    for i in range(3, 0, -1):
+        if responses[i-1] == "Yes":
+
+            logging.info("New leader is executor " + str(i))
+
+            while True:
+            
+                with grpc.insecure_channel('order_executor_'+str(i)+':5005'+str(i+5)) as channel:
+                    # Create a stub object.
+                    stub = order_executor_grpc.ExecutorServiceStub(channel)
+                    # Call the service through the stub object.
+                    response = stub.dequeueOrder(order_executor.ExecutorRequest())
+
+                checkLeaderHeartBeat(i)
+                
+
+def checkLeaderHeartBeat(leaderId):
+
+    with grpc.insecure_channel('order_executor_'+str(leaderId)+':5005'+str(leaderId+5)) as channel:
+        # Create a stub object.
+        stub = order_executor_grpc.ExecutorServiceStub(channel)
+        # Call the service through the stub object.
+        response = stub.executorAlive(order_executor.ExecutorRequest())
+    
+    if response.verdict == "Yes":
+        logging.info("Executor " + str(leaderId) + " is the leader.")
+        time.sleep(15)
+    else:
+        startLeaderElection()
 
 
 # Import Flask.
@@ -118,16 +177,17 @@ app = Flask(__name__)
 # Enable CORS for the app.
 CORS(app)
 
+firstTimeOnAHomePage = 0
+
 # Define a GET endpoint.
-@app.route('/', methods=['GET'])
+@app.route('/')
 def index():
-    """
-    Responds with 'Hello, [name]' when a GET request is made to '/' endpoint.
-    """
-    # Test the fraud-detection gRPC service.
-    response = greet()
-    # Return the response.
-    return response
+    
+    if firstTimeOnAHomePage == 0:
+        # Start leader election
+        startLeaderElection()
+        firstTimeOnAHomePage = 1
+
 
 @app.route('/checkout', methods=['POST'])
 def checkout():
