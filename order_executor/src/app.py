@@ -29,6 +29,11 @@ sys.path.insert(1, utils_path)
 import order_executor_pb2 as order_executor
 import order_executor_pb2_grpc as order_executor_grpc
 
+utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/order_queue'))
+sys.path.insert(2, utils_path)
+import order_queue_pb2 as order_queue
+import order_queue_pb2_grpc as order_queue_grpc
+
 
 import grpc
 from concurrent import futures
@@ -47,14 +52,14 @@ class ExecutorService(order_executor_grpc.ExecutorServiceServicer):
         response = order_executor.ExecutorResponse()
 
         channel = grpc.insecure_channel('order_queue:50054')
-        stub = order_executor.QueueServiceStub(channel)
-        request = order_executor_grpc.QueueRequest()
+        stub = order_queue_grpc.QueueServiceStub(channel)
+        request = order_queue.QueueRequest()
         response = stub.queueHasElements(request)
 
         if response.verdict == "Yes":
             channel = grpc.insecure_channel('order_queue:50054')
-            stub = order_executor.QueueServiceStub(channel)
-            request = order_executor_grpc.QueueRequest()
+            stub = order_queue_grpc.QueueServiceStub(channel)
+            request = order_queue.QueueRequest()
             response = stub.dequeue(request)
             
             logging.info("Order is being executed…")
@@ -68,11 +73,13 @@ class ExecutorService(order_executor_grpc.ExecutorServiceServicer):
             return response
 
     
-    def executorAlive(self):
+    def executorAlive(self, request, context):
+        response = order_executor.ExecutorResponse()
         if self.iAmAlive == 1:
-            return "Yes"
+            response.verdict = "Yes"
         else:
-            return "No"
+            response.verdict = "No"
+        return response
 
 def serve():
     # Create a gRPC server
@@ -84,12 +91,16 @@ def serve():
     port = "50056"
     server.add_insecure_port("[::]:" + port)
 
-    #port = "50057"
-    #server.add_insecure_port("[::]:" + port)
+    port = "50057"
+    server.add_insecure_port("[::]:" + port)
+
+    port = "50058"
+    server.add_insecure_port("[::]:" + port)
     # Start the server
     server.start()
     logging.info("Executor server started. Listening on port 50056.")
-    #logging.info("Executor server started. Listening on port 50057.")
+    logging.info("Executor server started. Listening on port 50057.")
+    logging.info("Executor server started. Listening on port 50058.")
     # Keep thread alive
     server.wait_for_termination()
 

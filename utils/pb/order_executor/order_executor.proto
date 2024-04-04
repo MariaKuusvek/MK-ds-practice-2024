@@ -4,6 +4,7 @@ package hello;
 
 service ExecutorService {
     rpc dequeueOrder (ExecutorRequest) returns (ExecutorResponse);
+    rpc executorAlive(ExecutorRequest) returns (ExecutorResponse);
 }
 
 message ExecutorRequest {

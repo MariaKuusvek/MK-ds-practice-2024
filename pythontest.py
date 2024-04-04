@@ -1,16 +1,7 @@
-file1 = open("testFile.txt", "r+")
- 
-print("Output of Read function is ")
-test = file1.readline()
-print(type(test))
-print(test)
-test = int(test) + 1
-print(type(test))
-print(test)
-file1.close()
+list = [1, 2, 3]
 
-file1 = open("testFile.txt", "w")
+print(list.index(2))
 
-file1.write(str(test))
-file1.close() 
- 
+list.insert(1, 60)
+
+print(list)

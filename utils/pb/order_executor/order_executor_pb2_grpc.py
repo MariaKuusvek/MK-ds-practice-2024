@@ -19,6 +19,11 @@ class ExecutorServiceStub(object):
                 request_serializer=order__executor__pb2.ExecutorRequest.SerializeToString,
                 response_deserializer=order__executor__pb2.ExecutorResponse.FromString,
                 )
+        self.executorAlive = channel.unary_unary(
+                '/hello.ExecutorService/executorAlive',
+                request_serializer=order__executor__pb2.ExecutorRequest.SerializeToString,
+                response_deserializer=order__executor__pb2.ExecutorResponse.FromString,
+                )
 
 
 class ExecutorServiceServicer(object):
@@ -30,11 +35,22 @@ class ExecutorServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def executorAlive(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ExecutorServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'dequeueOrder': grpc.unary_unary_rpc_method_handler(
                     servicer.dequeueOrder,
+                    request_deserializer=order__executor__pb2.ExecutorRequest.FromString,
+                    response_serializer=order__executor__pb2.ExecutorResponse.SerializeToString,
+            ),
+            'executorAlive': grpc.unary_unary_rpc_method_handler(
+                    servicer.executorAlive,
                     request_deserializer=order__executor__pb2.ExecutorRequest.FromString,
                     response_serializer=order__executor__pb2.ExecutorResponse.SerializeToString,
             ),
@@ -60,6 +76,23 @@ class ExecutorService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/hello.ExecutorService/dequeueOrder',
+            order__executor__pb2.ExecutorRequest.SerializeToString,
+            order__executor__pb2.ExecutorResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def executorAlive(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/hello.ExecutorService/executorAlive',
             order__executor__pb2.ExecutorRequest.SerializeToString,
             order__executor__pb2.ExecutorResponse.FromString,
             options, channel_credentials,

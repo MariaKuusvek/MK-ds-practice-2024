@@ -32,16 +32,24 @@ import order_queue_pb2_grpc as order_queue_grpc
 import grpc
 from concurrent import futures
 from collections import deque
+import math
+#import osmnx as ox
 
 # Create a class to define the server functions, derived from
 # order_queue_pb2_grpc.QueueServiceServicer
 class QueueService(order_queue_grpc.QueueServiceServicer):
-    queue = deque()
+    queue = []
 
     # Create an RPC function for queue logic
 
     def enqueue(self, request, context):
         logging.info("Enqueue started")
+
+        # We build the queue priority based on the distance between the users city and Tartu
+        #area1 = ox.geocode_to_gdf(request.city).geometry.centroid
+        #area2 = ox.geocode_to_gdf("Tartu").geometry.centroid#
+
+        #distance = math.sqrt((area2.x - area1.x)**2 + (area2.y - area1.y)**2)
 
         order = {
             "orderId": request.orderId,
@@ -57,8 +65,15 @@ class QueueService(order_queue_grpc.QueueServiceServicer):
                 "creditcardnr": request.creditcardnr,
                 "cvv": request.cvv,
                 "expirationDate": request.expirationDate,
-            }
+            },
+            #"distance": distance
         }
+        #logging.info("Distance: " + str(distance))
+
+        #for previousOrder in self.queue:
+        #     if previousOrder["distance"] > distance:
+        #          inx = self.queue.index(previousOrder)
+        #          self.queue.insert(inx, order)
 
         self.queue.append(order)
 
@@ -73,7 +88,8 @@ class QueueService(order_queue_grpc.QueueServiceServicer):
     def dequeue(self, request, context):
         logging.info("Dequeue started")
 
-        currentOrder = self.queue.popleft()
+        currentOrder = self.queue[0]
+        del self.queue[0]
         logging.info ("Order ID "  + currentOrder["orderId"] + " removed from queue")
         
 
