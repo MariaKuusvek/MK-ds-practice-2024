@@ -64,7 +64,7 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
                 response.verdict = "Fail"
                 response.reason = "FraudDetection Verdict: incorrect user data"
                 response.books = ""
-                return 
+                return response
             
             temp = self.myCurrentVC[0]
             self.myCurrentVC = request.newVC # this should become VCc now
