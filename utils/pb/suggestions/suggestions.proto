@@ -5,6 +5,7 @@ package hello;
 service SuggestionsService {
     rpc startBookSuggestionsMicroService (SuggestionsThreadRequest) returns (SuggestionsResponse);
     rpc bookSuggestionsEventF (SuggestionsRequest) returns (SuggestionsResponse);
+    rpc deleteData (SuggestionsDeleteRequest) return (SuggestionsDeleteResponse);
 }
 
 message SuggestionsRequest {
@@ -13,6 +14,12 @@ message SuggestionsRequest {
 }
 
 message SuggestionsThreadRequest {
+}
+
+message SuggestionsDeleteRequest {
+}
+
+message SuggestionsDeleteResponse {
 }
 
 message SuggestionsResponse {

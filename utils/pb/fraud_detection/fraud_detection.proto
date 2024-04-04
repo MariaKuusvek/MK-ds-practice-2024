@@ -6,6 +6,8 @@ service FraudService {
     rpc startFraudDecMicroService (FraudThreadRequest) returns (FraudResponse);
     rpc userDataEventC (FraudRequest) returns (FraudResponse);
     rpc creditCardEventE (FraudRequest) returns (FraudResponse);
+    rpc deleteDataInMicroservices(FraudDeleteRequest) return (FraudDeleteResponse)
+    rpc deleteData (FraudDeleteRequest) return (FraudDeleteResponse)
 }
 
 message FraudRequest {
@@ -17,6 +19,12 @@ message FraudThreadRequest {
     string creditCardNr = 1;
     string userName = 2;
     string userContact = 3;
+}
+
+message FraudDeleteRequest {
+}
+
+message FraudDeleteResponse {
 }
 
 message FraudResponse {

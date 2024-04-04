@@ -95,6 +95,10 @@ class SuggestionsService(suggestions_grpc.SuggestionsServiceServicer):
         return suggestedBooks
     
 
+    def deleteData(self, request, context):
+        self.myCurrentVC = []
+    
+
 
     
 
