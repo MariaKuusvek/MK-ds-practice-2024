@@ -118,6 +118,7 @@ def startLeaderElection():
         stub = order_executor_grpc.ExecutorServiceStub(channel)
         # Call the service through the stub object.
         response_1 = stub.executorAlive(order_executor.ExecutorRequest())
+        logging.info("executor 1 heatbeat response: " + str(response_1.verdict))
         responses.append(response_1.verdict)
 
     with grpc.insecure_channel('order_executor_2:50057') as channel:
@@ -125,6 +126,7 @@ def startLeaderElection():
         stub = order_executor_grpc.ExecutorServiceStub(channel)
         # Call the service through the stub object.
         response_2 = stub.executorAlive(order_executor.ExecutorRequest())
+        logging.info("executor 2 heatbeat response: " + str(response_2.verdict))
         responses.append(response_2.verdict)
 
     with grpc.insecure_channel('order_executor_3:50058') as channel:
@@ -132,6 +134,7 @@ def startLeaderElection():
         stub = order_executor_grpc.ExecutorServiceStub(channel)
         # Call the service through the stub object.
         response_3 = stub.executorAlive(order_executor.ExecutorRequest())
+        logging.info("executor 3 heatbeat response: " + str(response_3.verdict))
         responses.append(response_3.verdict)
 
     for i in range(3, 0, -1):
@@ -182,11 +185,12 @@ firstTimeOnAHomePage = 0
 # Define a GET endpoint.
 @app.route('/')
 def index():
+    pass
     
-    if firstTimeOnAHomePage == 0:
-        # Start leader election
-        startLeaderElection()
-        firstTimeOnAHomePage = 1
+    #if firstTimeOnAHomePage == 0:
+    #    # Start leader election
+    #    startLeaderElection()
+    #    firstTimeOnAHomePage = 1
 
 
 @app.route('/checkout', methods=['POST'])
@@ -196,6 +200,8 @@ def checkout():
     """
 
     logging.info('Checkout REST started')
+
+    startLeaderElection()
    
     # Print request object data
     print("Request Data:", request.json)
