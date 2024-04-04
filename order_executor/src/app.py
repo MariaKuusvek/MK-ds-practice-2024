@@ -2,6 +2,7 @@ import sys
 import os
 import random
 import logging
+import time
 logging.basicConfig(level=logging.DEBUG)
 
 # This set of lines are needed to import the gRPC stubs.
@@ -32,27 +33,46 @@ import order_executor_pb2_grpc as order_executor_grpc
 import grpc
 from concurrent import futures
 
+
 # Create a class to define the server functions, derived from
 # order_queue_pb2_grpc.QueueServiceServicer
 class ExecutorService(order_executor_grpc.ExecutorServiceServicer):
     # Create an RPC function for queue logic
 
-    def dequeueOrder(self, request, context):
-        logging.info("Dequeuing started in executor")
+    iAmAlive = 1
 
+    def dequeueOrder(self, request, context):
+
+        logging.info("Dequeuing started in executor")
         response = order_executor.ExecutorResponse()
 
         channel = grpc.insecure_channel('order_queue:50054')
         stub = order_executor.QueueServiceStub(channel)
         request = order_executor_grpc.QueueRequest()
-        response = stub.dequeue(request)
+        response = stub.queueHasElements(request)
 
-        logging.info("Order is being executed…")
+        if response.verdict == "Yes":
+            channel = grpc.insecure_channel('order_queue:50054')
+            stub = order_executor.QueueServiceStub(channel)
+            request = order_executor_grpc.QueueRequest()
+            response = stub.dequeue(request)
+            
+            logging.info("Order is being executed…")
+            response.verdict = "Order executed"
+            self.iAmAlive = 0
+            return response
 
-        response.verdict = "Order executed"
+        else:
+            logging.info("No order to execute")
+            response.verdict = "No order"
+            return response
 
-        return response
     
+    def executorAlive(self):
+        if self.iAmAlive == 1:
+            return "Yes"
+        else:
+            return "No"
 
 def serve():
     # Create a gRPC server
