@@ -135,3 +135,42 @@ services:
     volumes:
       - ./utils:/app/utils
       - ./order_executor/src:/app/order_executor/src
+  books_database_1:
+    build:
+      context: ./
+      dockerfile: ./books_database/Dockerfile
+    ports: 
+      - 49664:49664
+    environment:
+      - PYTHONUNBUFFERED=TRUE
+      - PYTHONFILE=/app/books_database/src/app.py
+      - EXECUTOR_ID=1
+    volumes:
+      - ./utils:/app/utils
+      - ./books_database/src:/app/books_database/src
+  books_database_2:
+    build:
+      context: ./
+      dockerfile: ./books_database/Dockerfile
+    ports: 
+      - 49665:49665
+    environment:
+      - PYTHONUNBUFFERED=TRUE
+      - PYTHONFILE=/app/books_database/src/app.py
+      - EXECUTOR_ID=2
+    volumes:
+      - ./utils:/app/utils
+      - ./books_database/src:/app/books_database/src
+  books_database_3:
+    build:
+      context: ./
+      dockerfile: ./books_database/Dockerfile
+    ports: 
+      - 49666:49666
+    environment:
+      - PYTHONUNBUFFERED=TRUE
+      - PYTHONFILE=/app/books_database/src/app.py
+      - EXECUTOR_ID=3
+    volumes:
+      - ./utils:/app/utils
+      - ./books_database/src:/app/books_database/src

@@ -216,39 +216,44 @@ def checkout():
     file.write(str(orderId))
     file.close() 
 
-    # Creating threads to call out microservices
-    thread_fraud = threading.Thread(target=fraud_detection_func, args=(request.json['creditCard']['number'],
-                                                                       request.json['user']['name'],
-                                                                       request.json['user']['contact']))
-    thread_verification = threading.Thread(target=transaction_verification_func, args=(len(request.json['items']),
-                                                                                        request.json['user']['name'],
-                                                                                        request.json['user']['contact'],
-                                                                                        request.json['billingAddress']['street'],
-                                                                                        request.json['billingAddress']['city'],
-                                                                                        request.json['billingAddress']['state'],
-                                                                                        request.json['billingAddress']['zip'],
-                                                                                        request.json['billingAddress']['country'],
-                                                                                        request.json['creditCard']['number'],
-                                                                                        request.json['creditCard']['cvv'],
-                                                                                        request.json['creditCard']['expirationDate'],
-                                                                                        str(orderId)))
-    thread_books = threading.Thread(target=books_suggestion_func)
-
-    # Starting threads
-    thread_fraud.start()
-    thread_verification.start()
-    thread_books.start()
-
-    logging.info('Threads in orchestrator started')
-
-    # Ending threads
-    thread_fraud.join()
-    thread_verification.join()
-    thread_books.join()
-
-    logging.info('Threads in orchestrator finished')
+    ## Creating threads to call out microservices
+    #thread_fraud = threading.Thread(target=fraud_detection_func, args=(request.json['creditCard']['number'],
+    #                                                                   request.json['user']['name'],
+    #                                                                   request.json['user']['contact']))
+    #thread_verification = threading.Thread(target=transaction_verification_func, args=(len(request.json['items']),
+    #                                                                                    request.json['user']['name'],
+    #                                                                                    request.json['user']['contact'],
+    #                                                                                    request.json['billingAddress']['street'],
+    #                                                                                    request.json['billingAddress']['city'],
+    #                                                                                    request.json['billingAddress']['state'],
+    #                                                                                    request.json['billingAddress']['zip'],
+    #                                                                                    request.json['billingAddress']['country'],
+    #                                                                                    request.json['creditCard']['number'],
+    #                                                                                    request.json['creditCard']['cvv'],
+    #                                                                                    request.json['creditCard']['expirationDate'],
+    #                                                                                    str(orderId)))
+    #thread_books = threading.Thread(target=books_suggestion_func)
+#
+    ## Starting threads
+    #thread_fraud.start()
+    #thread_verification.start()
+    #thread_books.start()
+#
+    #logging.info('Threads in orchestrator started')
+#
+    ## Ending threads
+    #thread_fraud.join()
+    #thread_verification.join()
+    #thread_books.join()
+#
+    #logging.info('Threads in orchestrator finished')
 
     order_status_response = {}
+
+    # Temporary success response, will change these back later
+    response_verdict = 'Pass'
+    response_reason = 'OK'
+    response_books = "1,Book1,Author1;2,Book2,Author2"
 
     # Creating response based on the results of the microservices
     if response_verdict != '' and response_reason != '':

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package hello;
+
+service DatabaseService {
+    rpc readDatabase (DatabaseReadRequest) returns (DatabaseReadResponse);
+    rpc writeDatabase (DatabaseWriteRequest) returns (DatabaseWriteResponse);
+}
+
+message DatabaseReadRequest {
+    string book_title = 1;
+}
+
+message DatabaseWriteRequest {
+    string book_title = 1;
+    int32 quantity = 2;
+}
+
+message DatabaseReadResponse {
+    int32 quantity = 1;
+}
+
+message DatabaseWriteResponse {
+    string verdict = 1;
+}
