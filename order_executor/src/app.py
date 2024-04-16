@@ -72,7 +72,7 @@ class ExecutorService(order_executor_grpc.ExecutorServiceServicer):
             # Read from database
             channel = grpc.insecure_channel('books_database:49664')
             stub = books_database_grpc.DatabaseServiceStub(channel)
-            request = books_database.DatabaseReadRequest(book_title=responseQueue.itemsName)
+            request = books_database.DatabaseReadRequest(book_title=responseQueue.bookTitle)
             responseDatabase = stub.readDatabase(request)
 
             if responseDatabase.quantity <= 0:
@@ -82,7 +82,7 @@ class ExecutorService(order_executor_grpc.ExecutorServiceServicer):
             # Write to database
             channel = grpc.insecure_channel('books_database:49664')
             stub = books_database_grpc.DatabaseServiceStub(channel)
-            request = books_database.DatabaseWriteRequest(book_title=responseDatabase.itemsName, quantity=responseDatabase.quantity)
+            request = books_database.DatabaseWriteRequest(book_title=responseDatabase.bookTitle, quantity=responseDatabase.quantity)
             response = stub.writeDatabase(request)
 
             if response.verdict != "OK":

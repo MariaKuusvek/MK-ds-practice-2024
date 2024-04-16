@@ -9,8 +9,8 @@ service QueueService {
 }
 
 message QueueRequest {
-    int32 itemsLength = 1;
-    string itemsName = 2;
+    int32 bookQuantity = 1;
+    string bookTitle = 2;
     string userName = 3;
     string userContact = 4;
     string street = 5;
@@ -32,8 +32,8 @@ message QueueResponse {
 }
 
 message QueueResponseDequeue {
-    int32 itemsLength = 1;
-    string itemsName = 2;
+    int32 bookQuantity = 1;
+    string bookTitle = 2;
     string userName = 3;
     string userContact = 4;
     string street = 5;
