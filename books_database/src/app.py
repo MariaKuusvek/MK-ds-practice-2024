@@ -25,33 +25,45 @@ class DatabaseService(books_database_grpc.DatabaseServiceServicer):
 
         response = books_database.DatabaseReadResponse()
 
-        path = os.getcwd() + "/books_database/database.txt"
+        logging.info("Reading the book quantity from database")
+
+        path = os.getcwd() + "/books_database/src/database.txt"
         file = open(path, "r+")
         line = file.readline()
         while line:
             book_info = line.split(",")
             if book_info[0] == title:
-                response.quantity = int(book_info[1])
+                response.quantity = int(book_info[1].strip())
                 break
             line = file.readline()
         file.close()
+
         return response
 
     def writeDatabase(self, request, context):
         title = request.book_title
         quantity = request.quantity
 
-        path = os.getcwd() + "/books_database/database.txt"
-        file = open(path, "w")
+        logging.info("Writing new book quantity info to database")
 
-        for line in fileinput.input(file, inplace=1):
-            book_info = line.split(",")
+        path = os.getcwd() + "/books_database/src/database.txt"
+        file = open(path, "r")
+
+        lines = file.readlines()
+
+        for i in range(len(lines)):
+            book_info = lines[i].strip().split(",")
             if book_info[0] == title:
-                new_quantity = book_info[1] - quantity
+                new_quantity = int(book_info[1]) - quantity
                 new_line = title + "," + str(new_quantity)
-                line = new_line
-            sys.stdout.write(line)
+                lines[i] = new_line
+            else:
+                lines[i] = lines[i].strip()
+        
+        file.close()
 
+        file = open(path, "w")
+        file.write('\n'.join(lines))
         file.close() 
 
         response = books_database.DatabaseWriteResponse()

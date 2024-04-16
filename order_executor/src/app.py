@@ -9,21 +9,6 @@ logging.basicConfig(level=logging.DEBUG)
 # The path of the stubs is relative to the current file, or absolute inside the container.
 # Change these lines only if strictly needed.
 FILE = __file__ if '__file__' in globals() else os.getenv("PYTHONFILE", "")
-utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/suggestions'))
-sys.path.insert(0, utils_path)
-import suggestions_pb2 as suggestions
-import suggestions_pb2_grpc as suggestions_grpc
-
-utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/fraud_detection'))
-sys.path.insert(0, utils_path)
-import fraud_detection_pb2 as fraud_detection
-import fraud_detection_pb2_grpc as fraud_detection_grpc
-
-utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/transaction_verification'))
-sys.path.insert(1, utils_path)
-import transaction_verification_pb2 as transaction_verification
-import transaction_verification_pb2_grpc as transaction_verification_grpc
-
 utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/order_executor'))
 sys.path.insert(1, utils_path)
 import order_executor_pb2 as order_executor
@@ -70,7 +55,7 @@ class ExecutorService(order_executor_grpc.ExecutorServiceServicer):
             logging.info("Order is being executed…")
 
             # Read from database
-            channel = grpc.insecure_channel('books_database:49664')
+            channel = grpc.insecure_channel('books_database_1:49664')
             stub = books_database_grpc.DatabaseServiceStub(channel)
             request = books_database.DatabaseReadRequest(book_title=responseQueue.bookTitle)
             responseDatabase = stub.readDatabase(request)
@@ -80,9 +65,9 @@ class ExecutorService(order_executor_grpc.ExecutorServiceServicer):
                 return response
 
             # Write to database
-            channel = grpc.insecure_channel('books_database:49664')
+            channel = grpc.insecure_channel('books_database_1:49664')
             stub = books_database_grpc.DatabaseServiceStub(channel)
-            request = books_database.DatabaseWriteRequest(book_title=responseDatabase.bookTitle, quantity=responseDatabase.quantity)
+            request = books_database.DatabaseWriteRequest(book_title=responseQueue.bookTitle, quantity=responseQueue.bookQuantity)
             response = stub.writeDatabase(request)
 
             if response.verdict != "OK":
