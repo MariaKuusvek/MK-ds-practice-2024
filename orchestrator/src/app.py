@@ -251,17 +251,51 @@ def checkout():
     order_status_response = {}
 
     # Temporary success response, will change these back later
-    response_verdict = 'Pass'
-    response_reason = 'OK'
-    response_books = "1,Book1,Author1;2,Book2,Author2"
+    #response_verdict = 'Pass'
+    #response_reason = 'OK'
+    #response_books = "1,Book1,Author1;2,Book2,Author2"
+#
+    ## Creating response based on the results of the microservices
+    #if response_verdict != '' and response_reason != '':
+    #    if response_verdict == 'Pass':
+#
+    #        # Putting the verified order into a queue
+    #    
+    #        order_queue_func(len(request.json['items']),
+    #                            request.json['user']['name'],
+    #                            request.json['user']['contact'],
+    #                            request.json['billingAddress']['street'],
+    #                            request.json['billingAddress']['city'],
+    #                            request.json['billingAddress']['state'],
+    #                            request.json['billingAddress']['zip'],
+    #                            request.json['billingAddress']['country'],
+    #                            request.json['creditCard']['number'],
+    #                            request.json['creditCard']['cvv'],
+    #                            request.json['creditCard']['expirationDate'],
+    #                            str(orderId))
+#
+    #        books = response_books.split(";")
+    #        books_object = []
+    #        for i in range(len(books)):
+    #            book_info = books[i].split(",")
+    #            books_object.append({'bookId': book_info[0], 'title': book_info[1], 'author': book_info[2]})
+#
+    #        order_status_response = {
+    #            'orderId': orderId,
+    #            'status': 'Order Approved',
+    #            'suggestedBooks': books_object
+    #        }
+    #    else:
+    #        order_status_response = {
+    #            'orderId': orderId,
+    #            'status': 'Order Rejected',
+    #            'suggestedBooks': []
+    #        }
 
-    # Creating response based on the results of the microservices
-    if response_verdict != '' and response_reason != '':
-        if response_verdict == 'Pass':
 
-            # Putting the verified order into a queue
-        
-            order_queue_func(len(request.json['items']),
+    # Adding order into a queue
+    order_queue_func(len(request.json['items']['quantity']),
+                                request.json['items']['name'],
                                 request.json['user']['name'],
                                 request.json['user']['contact'],
                                 request.json['billingAddress']['street'],
@@ -274,22 +308,25 @@ def checkout():
                                 request.json['creditCard']['expirationDate'],
                                 str(orderId))
 
-            books = response_books.split(";")
-            books_object = []
-            for i in range(len(books)):
-                book_info = books[i].split(",")
-                books_object.append({'bookId': book_info[0], 'title': book_info[1], 'author': book_info[2]})
+    # Executing an order
+    with grpc.insecure_channel('order_executor_1:50056') as channel:
+            stub = order_executor_grpc.ExecutorServiceStub(channel)
+            response = stub.dequeueOrder(order_executor.ExecutorRequest())
 
-            order_status_response = {
+    # Putting together a response
+    orderStatus = ""
+    if response.verdict == "Pass":
+        orderStatus = "Order Approved"
+    else:
+        orderStatus = "Order Rejected"
+
+    order_status_response = {
                 'orderId': orderId,
-                'status': 'Order Approved',
-                'suggestedBooks': books_object
-            }
-        else:
-            order_status_response = {
-                'orderId': orderId,
-                'status': 'Order Rejected',
-                'suggestedBooks': []
+                'status': orderStatus,
+                'suggestedBooks': [
+                    {'bookId': '123', 'title': 'Dummy Book 1', 'author': 'Author 1'},
+                    {'bookId': '456', 'title': 'Dummy Book 2', 'author': 'Author 2'}
+                ]
             }
 
     logging.info('Order status response created')
