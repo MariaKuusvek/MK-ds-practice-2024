@@ -5,8 +5,9 @@ from typing import ClassVar as _ClassVar, Optional as _Optional
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class QueueRequest(_message.Message):
-    __slots__ = ("itemsLength", "userName", "userContact", "street", "city", "state", "zip", "country", "creditcardnr", "cvv", "expirationDate", "orderId")
+    __slots__ = ("itemsLength", "itemsName", "userName", "userContact", "street", "city", "state", "zip", "country", "creditcardnr", "cvv", "expirationDate", "orderId")
     ITEMSLENGTH_FIELD_NUMBER: _ClassVar[int]
+    ITEMSNAME_FIELD_NUMBER: _ClassVar[int]
     USERNAME_FIELD_NUMBER: _ClassVar[int]
     USERCONTACT_FIELD_NUMBER: _ClassVar[int]
     STREET_FIELD_NUMBER: _ClassVar[int]
@@ -19,6 +20,7 @@ class QueueRequest(_message.Message):
     EXPIRATIONDATE_FIELD_NUMBER: _ClassVar[int]
     ORDERID_FIELD_NUMBER: _ClassVar[int]
     itemsLength: int
+    itemsName: str
     userName: str
     userContact: str
     street: str
@@ -30,7 +32,7 @@ class QueueRequest(_message.Message):
     cvv: str
     expirationDate: str
     orderId: str
-    def __init__(self, itemsLength: _Optional[int] = ..., userName: _Optional[str] = ..., userContact: _Optional[str] = ..., street: _Optional[str] = ..., city: _Optional[str] = ..., state: _Optional[str] = ..., zip: _Optional[str] = ..., country: _Optional[str] = ..., creditcardnr: _Optional[str] = ..., cvv: _Optional[str] = ..., expirationDate: _Optional[str] = ..., orderId: _Optional[str] = ...) -> None: ...
+    def __init__(self, itemsLength: _Optional[int] = ..., itemsName: _Optional[str] = ..., userName: _Optional[str] = ..., userContact: _Optional[str] = ..., street: _Optional[str] = ..., city: _Optional[str] = ..., state: _Optional[str] = ..., zip: _Optional[str] = ..., country: _Optional[str] = ..., creditcardnr: _Optional[str] = ..., cvv: _Optional[str] = ..., expirationDate: _Optional[str] = ..., orderId: _Optional[str] = ...) -> None: ...
 
 class QueueRequestDequeue(_message.Message):
     __slots__ = ()
@@ -43,8 +45,9 @@ class QueueResponse(_message.Message):
     def __init__(self, verdict: _Optional[str] = ...) -> None: ...
 
 class QueueResponseDequeue(_message.Message):
-    __slots__ = ("itemsLength", "userName", "userContact", "street", "city", "state", "zip", "country", "creditcardnr", "cvv", "expirationDate", "orderId")
+    __slots__ = ("itemsLength", "itemsName", "userName", "userContact", "street", "city", "state", "zip", "country", "creditcardnr", "cvv", "expirationDate", "orderId")
     ITEMSLENGTH_FIELD_NUMBER: _ClassVar[int]
+    ITEMSNAME_FIELD_NUMBER: _ClassVar[int]
     USERNAME_FIELD_NUMBER: _ClassVar[int]
     USERCONTACT_FIELD_NUMBER: _ClassVar[int]
     STREET_FIELD_NUMBER: _ClassVar[int]
@@ -57,6 +60,7 @@ class QueueResponseDequeue(_message.Message):
     EXPIRATIONDATE_FIELD_NUMBER: _ClassVar[int]
     ORDERID_FIELD_NUMBER: _ClassVar[int]
     itemsLength: int
+    itemsName: str
     userName: str
     userContact: str
     street: str
@@ -68,4 +72,4 @@ class QueueResponseDequeue(_message.Message):
     cvv: str
     expirationDate: str
     orderId: str
-    def __init__(self, itemsLength: _Optional[int] = ..., userName: _Optional[str] = ..., userContact: _Optional[str] = ..., street: _Optional[str] = ..., city: _Optional[str] = ..., state: _Optional[str] = ..., zip: _Optional[str] = ..., country: _Optional[str] = ..., creditcardnr: _Optional[str] = ..., cvv: _Optional[str] = ..., expirationDate: _Optional[str] = ..., orderId: _Optional[str] = ...) -> None: ...
+    def __init__(self, itemsLength: _Optional[int] = ..., itemsName: _Optional[str] = ..., userName: _Optional[str] = ..., userContact: _Optional[str] = ..., street: _Optional[str] = ..., city: _Optional[str] = ..., state: _Optional[str] = ..., zip: _Optional[str] = ..., country: _Optional[str] = ..., creditcardnr: _Optional[str] = ..., cvv: _Optional[str] = ..., expirationDate: _Optional[str] = ..., orderId: _Optional[str] = ...) -> None: ...

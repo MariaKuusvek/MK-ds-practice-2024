@@ -10,17 +10,18 @@ service QueueService {
 
 message QueueRequest {
     int32 itemsLength = 1;
-    string userName = 2;
-    string userContact = 3;
-    string street = 4;
-    string city = 5;
-    string state = 6;
-    string zip = 7;
-    string country = 8;
-    string creditcardnr = 9;
-    string cvv = 10;
-    string expirationDate = 11;
-    string orderId = 12;
+    string itemsName = 2;
+    string userName = 3;
+    string userContact = 4;
+    string street = 5;
+    string city = 6;
+    string state = 7;
+    string zip = 8;
+    string country = 9;
+    string creditcardnr = 10;
+    string cvv = 11;
+    string expirationDate = 12;
+    string orderId = 13;
 }
 
 message QueueRequestDequeue {
@@ -32,15 +33,16 @@ message QueueResponse {
 
 message QueueResponseDequeue {
     int32 itemsLength = 1;
-    string userName = 2;
-    string userContact = 3;
-    string street = 4;
-    string city = 5;
-    string state = 6;
-    string zip = 7;
-    string country = 8;
-    string creditcardnr = 9;
-    string cvv = 10;
-    string expirationDate = 11;
-    string orderId = 12;
+    string itemsName = 2;
+    string userName = 3;
+    string userContact = 4;
+    string street = 5;
+    string city = 6;
+    string state = 7;
+    string zip = 8;
+    string country = 9;
+    string creditcardnr = 10;
+    string cvv = 11;
+    string expirationDate = 12;
+    string orderId = 13;
 }

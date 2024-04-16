@@ -55,6 +55,7 @@ class QueueService(order_queue_grpc.QueueServiceServicer):
             "orderId": request.orderId,
             "orderInfo": {
                 "itemsLength": request.itemsLength,
+                "itemsName": request.itemsName,
                 "userName": request.userName,
                 "userContact": request.userContact,
                 "street": request.street,
@@ -102,6 +103,7 @@ class QueueService(order_queue_grpc.QueueServiceServicer):
         response = order_queue.QueueResponseDequeue()
 
         response.itemsLength = currentOrder["orderInfo"]["itemsLength"]
+        response.itemsName = currentOrder["orderInfo"]["itemsName"]
         response.userName = currentOrder["orderInfo"]["userName"]
         response.street = currentOrder["orderInfo"]["street"]
         response.city = currentOrder["orderInfo"]["city"]
