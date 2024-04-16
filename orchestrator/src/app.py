@@ -88,13 +88,14 @@ def books_suggestion_func():
         # Call the service through the stub object.
         response = stub.startBookSuggestionsMicroService(suggestions.SuggestionsThreadRequest())
 
-def order_queue_func(itemsL, name, contact, street, city, state, zip, country, ccnr, cvv, expdate, orderId):
+def order_queue_func(quantity, title, name, contact, street, city, state, zip, country, ccnr, cvv, expdate, orderId):
     # Establish a connection with the order queue gRPC service.
     with grpc.insecure_channel('order_queue:50054') as channel:
         # Create a stub object.
         stub = order_queue_grpc.QueueServiceStub(channel)
         # Call the service through the stub object.
-        response = stub.enqueue(order_queue.QueueRequest(itemsLength=itemsL,
+        response = stub.enqueue(order_queue.QueueRequest(bookQuantity=quantity,
+                                                            bookTitle=title,
                                                             userName = name,
                                                             userContact = contact,
                                                             street = street,
@@ -261,8 +262,8 @@ def checkout():
 #
     #        # Putting the verified order into a queue
     #    
-    #        order_queue_func(len(request.json['items']),
-    #                            request.json['user']['name'],
+    #        order_queue_func(request.json['items'][0]['quantity'],
+    #                            request.json['items'][0]['name'],
     #                            request.json['user']['contact'],
     #                            request.json['billingAddress']['street'],
     #                            request.json['billingAddress']['city'],
@@ -294,8 +295,8 @@ def checkout():
 
 
     # Adding order into a queue
-    order_queue_func(request.json['items']['quantity'],
-                                request.json['items']['name'],
+    order_queue_func(request.json['items'][0]['quantity'],
+                                request.json['items'][0]['name'],
                                 request.json['user']['name'],
                                 request.json['user']['contact'],
                                 request.json['billingAddress']['street'],
