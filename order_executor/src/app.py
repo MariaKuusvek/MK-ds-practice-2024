@@ -36,8 +36,8 @@ import order_queue_pb2_grpc as order_queue_grpc
 
 utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/books_database'))
 sys.path.insert(2, utils_path)
-import books_database_pb2 as order_queue
-import books_database_pb2_grpc as order_queue_grpc
+import books_database_pb2 as books_database
+import books_database_pb2_grpc as books_database_grpc
 
 
 import grpc

@@ -294,7 +294,7 @@ def checkout():
 
 
     # Adding order into a queue
-    order_queue_func(len(request.json['items']['quantity']),
+    order_queue_func(request.json['items']['quantity'],
                                 request.json['items']['name'],
                                 request.json['user']['name'],
                                 request.json['user']['contact'],
