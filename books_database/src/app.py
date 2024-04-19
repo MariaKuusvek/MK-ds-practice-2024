@@ -77,10 +77,10 @@ class DatabaseService(books_database_grpc.DatabaseServiceServicer):
         response = books_database.DatabasePrepareResponse()
 
         if num < 0.1:
-            response.verdict = "FAIL"
+            response.verdict = "Fail"
             logging.info("Books Database is not prepared!")
         else:
-            response.verdict = "PASS"
+            response.verdict = "Pass"
             logging.info("Books Database is prepared!")
 
         return response

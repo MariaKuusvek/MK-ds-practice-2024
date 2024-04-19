@@ -31,10 +31,10 @@ class PaymentService(payment_system_grpc.PaymentServiceServicer):
         response = payment_system.PaymentResponse()
 
         if num < 0.1:
-            response.verdict = "FAIL"
+            response.verdict = "Fail"
             logging.info("Payment System is not prepared!")
         else:
-            response.verdict = "PASS"
+            response.verdict = "Pass"
             logging.info("Payment System is prepared!")
 
         return response
