@@ -24,6 +24,11 @@ sys.path.insert(2, utils_path)
 import books_database_pb2 as books_database
 import books_database_pb2_grpc as books_database_grpc
 
+utils_path = os.path.abspath(os.path.join(FILE, '../../../utils/pb/payment_system'))
+sys.path.insert(2, utils_path)
+import payment_system_pb2 as payment_system
+import payment_system_pb2_grpc as payment_system_grpc
+
 
 import grpc
 from concurrent import futures
@@ -64,13 +69,15 @@ class ExecutorService(order_executor_grpc.ExecutorServiceServicer):
                 response.verdict = "Fail"
                 return response
 
-            # Write to database
-            channel = grpc.insecure_channel('books_database_1:49664')
-            stub = books_database_grpc.DatabaseServiceStub(channel)
-            request = books_database.DatabaseWriteRequest(book_title=responseQueue.bookTitle, quantity=responseQueue.bookQuantity)
-            response = stub.writeDatabase(request)
 
-            if response.verdict != "OK":
+            prepareResponse = self.askForServicePrepared()
+
+            if prepareResponse == "Pass" :
+                commitResponse = self.commitChanges(responseQueue.bookTitle, responseQueue.bookQuantity)
+                if commitResponse != "Pass":
+                    response.verdict = "Fail"
+                    return response
+            else :
                 response.verdict = "Fail"
                 return response
                         
@@ -91,6 +98,46 @@ class ExecutorService(order_executor_grpc.ExecutorServiceServicer):
         else:
             response.verdict = "No"
         return response
+    
+
+    def askForServicePrepared(self):
+
+        channel = grpc.insecure_channel('books_database_1:49664')
+        stub = books_database_grpc.DatabaseServiceStub(channel)
+        request = books_database.DatabasePrepareRequest()
+        responseDatabase = stub.prepareToExecute(request)
+
+        channel = grpc.insecure_channel('payment_system:49667')
+        stub = payment_system_grpc.PaymentServiceStub(channel)
+        request = payment_system.PaymentRequest()
+        responsePayment = stub.prepareToExecute(request)
+
+        if responseDatabase.verdict == "Pass" and responsePayment.verdict == "Pass":
+            return "Pass"
+        else:
+            return "Fail"
+        
+    def commitChanges(self, bookTitle, bookQuantity):
+
+        # Write to database
+        channel = grpc.insecure_channel('books_database_1:49664')
+        stub = books_database_grpc.DatabaseServiceStub(channel)
+        request = books_database.DatabaseWriteRequest(book_title=bookTitle, quantity=bookQuantity)
+        responseDatabase = stub.writeDatabase(request)
+
+        channel = grpc.insecure_channel('payment_system:49667')
+        stub = payment_system_grpc.PaymentServiceStub(channel)
+        request = payment_system.PaymentRequest()
+        responsePayment = stub.paymentLogic(request)
+
+        if responseDatabase.verdict == "OK" and responsePayment.verdict == "OK":
+            return "Pass"
+        else:
+            return "Fail"
+
+
+
+
 
 def serve():
     # Create a gRPC server
