@@ -5,10 +5,8 @@ from typing import ClassVar as _ClassVar, Optional as _Optional
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class PaymentRequest(_message.Message):
-    __slots__ = ("orderId",)
-    ORDERID_FIELD_NUMBER: _ClassVar[int]
-    orderId: str
-    def __init__(self, orderId: _Optional[str] = ...) -> None: ...
+    __slots__ = ()
+    def __init__(self) -> None: ...
 
 class PaymentResponse(_message.Message):
     __slots__ = ("verdict",)

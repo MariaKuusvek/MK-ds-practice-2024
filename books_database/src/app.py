@@ -4,6 +4,7 @@ import grpc
 import fileinput
 from concurrent import futures
 import logging
+import random
 logging.basicConfig(level=logging.DEBUG)
 
 # This set of lines are needed to import the gRPC stubs.
@@ -68,6 +69,20 @@ class DatabaseService(books_database_grpc.DatabaseServiceServicer):
 
         response = books_database.DatabaseWriteResponse()
         response.verdict = "OK"
+        return response
+    
+    def prepareToExecute(self, request, context):
+        
+        num = random.random()
+        response = books_database.DatabasePrepareResponse()
+
+        if num < 0.1:
+            response.verdict = "Fail"
+            logging.info("Books Database is not prepared!")
+        else:
+            response.verdict = "Pass"
+            logging.info("Books Database is prepared!")
+
         return response
     
 def serve():

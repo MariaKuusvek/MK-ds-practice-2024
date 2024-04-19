@@ -19,6 +19,11 @@ class PaymentServiceStub(object):
                 request_serializer=payment__system__pb2.PaymentRequest.SerializeToString,
                 response_deserializer=payment__system__pb2.PaymentResponse.FromString,
                 )
+        self.prepareToExecute = channel.unary_unary(
+                '/hello.PaymentService/prepareToExecute',
+                request_serializer=payment__system__pb2.PaymentRequest.SerializeToString,
+                response_deserializer=payment__system__pb2.PaymentResponse.FromString,
+                )
 
 
 class PaymentServiceServicer(object):
@@ -30,11 +35,22 @@ class PaymentServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def prepareToExecute(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_PaymentServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'paymentLogic': grpc.unary_unary_rpc_method_handler(
                     servicer.paymentLogic,
+                    request_deserializer=payment__system__pb2.PaymentRequest.FromString,
+                    response_serializer=payment__system__pb2.PaymentResponse.SerializeToString,
+            ),
+            'prepareToExecute': grpc.unary_unary_rpc_method_handler(
+                    servicer.prepareToExecute,
                     request_deserializer=payment__system__pb2.PaymentRequest.FromString,
                     response_serializer=payment__system__pb2.PaymentResponse.SerializeToString,
             ),
@@ -60,6 +76,23 @@ class PaymentService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/hello.PaymentService/paymentLogic',
+            payment__system__pb2.PaymentRequest.SerializeToString,
+            payment__system__pb2.PaymentResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def prepareToExecute(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/hello.PaymentService/prepareToExecute',
             payment__system__pb2.PaymentRequest.SerializeToString,
             payment__system__pb2.PaymentResponse.FromString,
             options, channel_credentials,
