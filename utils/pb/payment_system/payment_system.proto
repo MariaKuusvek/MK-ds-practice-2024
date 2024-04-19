@@ -4,10 +4,10 @@ package hello;
 
 service PaymentService {
     rpc paymentLogic (PaymentRequest) returns (PaymentResponse);
+    rpc prepareToExecute (PaymentRequest) returns (PaymentResponse);
 }
 
 message PaymentRequest {
-    string orderId = 1;
 }
 
 message PaymentResponse {

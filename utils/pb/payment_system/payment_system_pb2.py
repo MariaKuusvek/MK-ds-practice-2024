@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14payment_system.proto\x12\x05hello\"!\n\x0ePaymentRequest\x12\x0f\n\x07orderId\x18\x01 \x01(\t\"\"\n\x0fPaymentResponse\x12\x0f\n\x07verdict\x18\x01 \x01(\t2O\n\x0ePaymentService\x12=\n\x0cpaymentLogic\x12\x15.hello.PaymentRequest\x1a\x16.hello.PaymentResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14payment_system.proto\x12\x05hello\"\x10\n\x0ePaymentRequest\"\"\n\x0fPaymentResponse\x12\x0f\n\x07verdict\x18\x01 \x01(\t2\x92\x01\n\x0ePaymentService\x12=\n\x0cpaymentLogic\x12\x15.hello.PaymentRequest\x1a\x16.hello.PaymentResponse\x12\x41\n\x10prepareToExecute\x12\x15.hello.PaymentRequest\x1a\x16.hello.PaymentResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -22,9 +22,9 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'payment_system_pb2', _globa
 if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
   _globals['_PAYMENTREQUEST']._serialized_start=31
-  _globals['_PAYMENTREQUEST']._serialized_end=64
-  _globals['_PAYMENTRESPONSE']._serialized_start=66
-  _globals['_PAYMENTRESPONSE']._serialized_end=100
-  _globals['_PAYMENTSERVICE']._serialized_start=102
-  _globals['_PAYMENTSERVICE']._serialized_end=181
+  _globals['_PAYMENTREQUEST']._serialized_end=47
+  _globals['_PAYMENTRESPONSE']._serialized_start=49
+  _globals['_PAYMENTRESPONSE']._serialized_end=83
+  _globals['_PAYMENTSERVICE']._serialized_start=86
+  _globals['_PAYMENTSERVICE']._serialized_end=232
 # @@protoc_insertion_point(module_scope)

@@ -5,6 +5,7 @@ package hello;
 service DatabaseService {
     rpc readDatabase (DatabaseReadRequest) returns (DatabaseReadResponse);
     rpc writeDatabase (DatabaseWriteRequest) returns (DatabaseWriteResponse);
+    rpc prepareToExecute (DatabasePrepareRequest) returns (DatabasePrepareResponse);
 }
 
 message DatabaseReadRequest {
@@ -21,5 +22,12 @@ message DatabaseReadResponse {
 }
 
 message DatabaseWriteResponse {
+    string verdict = 1;
+}
+
+message DatabasePrepareRequest {
+}
+
+message DatabasePrepareResponse {
     string verdict = 1;
 }

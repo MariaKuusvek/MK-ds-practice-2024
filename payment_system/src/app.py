@@ -1,9 +1,9 @@
 import sys
 import os
 import grpc
-import fileinput
 from concurrent import futures
 import logging
+import random
 logging.basicConfig(level=logging.DEBUG)
 
 # This set of lines are needed to import the gRPC stubs.
@@ -23,6 +23,20 @@ class PaymentService(payment_system_grpc.PaymentServiceServicer):
     def paymentLogic(self, request, context):
         response = payment_system.PaymentResponse()
         response.verdict = "OK"
+        logging.info("Payment Logic Executed!")
+        return response
+    
+    def prepareToExecute(self, request, context):
+        num = random.random()
+        response = payment_system.PaymentResponse()
+
+        if num < 0.1:
+            response.verdict = "FAIL"
+            logging.info("Payment System is not prepared!")
+        else:
+            response.verdict = "PASS"
+            logging.info("Payment System is prepared!")
+
         return response
     
 def serve():

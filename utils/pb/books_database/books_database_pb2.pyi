@@ -29,3 +29,13 @@ class DatabaseWriteResponse(_message.Message):
     VERDICT_FIELD_NUMBER: _ClassVar[int]
     verdict: str
     def __init__(self, verdict: _Optional[str] = ...) -> None: ...
+
+class DatabasePrepareRequest(_message.Message):
+    __slots__ = ()
+    def __init__(self) -> None: ...
+
+class DatabasePrepareResponse(_message.Message):
+    __slots__ = ("verdict",)
+    VERDICT_FIELD_NUMBER: _ClassVar[int]
+    verdict: str
+    def __init__(self, verdict: _Optional[str] = ...) -> None: ...
