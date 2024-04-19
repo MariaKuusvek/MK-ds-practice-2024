@@ -174,3 +174,15 @@ services:
     volumes:
       - ./utils:/app/utils
       - ./books_database/src:/app/books_database/src
+  payment_system:
+    build:
+      context: ./
+      dockerfile: ./payment_system/Dockerfile
+    ports: 
+      - 49667:49667
+    environment:
+      - PYTHONUNBUFFERED=TRUE
+      - PYTHONFILE=/app/payment_system/src/app.py
+    volumes:
+      - ./utils:/app/utils
+      - ./payment_system/src:/app/payment_system/src
