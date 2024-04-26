@@ -319,7 +319,7 @@ def checkout():
     if response.verdict == "Pass":
         orderStatus = "Order Approved"
     else:
-        orderStatus = "Order Rejected"
+        orderStatus = "Order REJECTED"
 
     order_status_response = {
                 'orderId': orderId,

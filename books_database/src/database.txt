@@ -1,4 +1,4 @@
-Learning Python,9
-JavaScript - The Good Parts,15
-Domain-Driven Design: Tackling Complexity in the Heart of Software,5
+Learning Python,0
+JavaScript - The Good Parts,19
+Domain-Driven Design: Tackling Complexity in the Heart of Software,25
 Design Patterns: Elements of Reusable Object-Oriented Software,15
