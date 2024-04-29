@@ -3,6 +3,7 @@ import os
 import threading
 import logging
 import time
+import random
 logging.basicConfig(level=logging.DEBUG)
 
 # This set of lines are needed to import the gRPC stubs.
@@ -39,6 +40,8 @@ import grpc
 response_verdict = ''
 response_reason = ''
 response_books = ''
+
+executor_working = 'No'
 
 
 def fraud_detection_func(creditcard, userName, userContact):
@@ -309,10 +312,23 @@ def checkout():
                                 request.json['creditCard']['expirationDate'],
                                 str(orderId))
 
-    # Executing an order
-    with grpc.insecure_channel('order_executor_1:50056') as channel:
-            stub = order_executor_grpc.ExecutorServiceStub(channel)
-            response = stub.dequeueOrder(order_executor.ExecutorRequest())
+
+    while True :
+        if executor_working == 'Yes':
+            time.sleep(1)
+        else: 
+            executor_working = "Yes"
+            # Choosing an executer
+            index = random.choice(range(1, 4))
+
+            logging.info("order_executor"+str(index)+':5005'+str(index+5)+" has the right to access data.")
+
+            # Executing an order
+            with grpc.insecure_channel('order_executor_'+str(index)+':5005'+str(index+5)) as channel:
+                stub = order_executor_grpc.ExecutorServiceStub(channel)
+                response = stub.dequeueOrder(order_executor.ExecutorRequest())
+            executor_working = "No"
+            break
 
     # Putting together a response
     orderStatus = ""
