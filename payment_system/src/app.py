@@ -21,6 +21,9 @@ import payment_system_pb2_grpc as payment_system_grpc
 class PaymentService(payment_system_grpc.PaymentServiceServicer):
 
     def paymentLogic(self, request, context):
+
+        # This function has/should have some dummy logic for doing the payment.
+
         response = payment_system.PaymentResponse()
         response.verdict = "OK"
         logging.info("Payment Logic Executed!")

@@ -46,12 +46,15 @@ class ExecutorService(order_executor_grpc.ExecutorServiceServicer):
         logging.info("Dequeuing started in executor")
         response = order_executor.ExecutorResponse()
 
+        # Checking if database has enough of that book
         channel = grpc.insecure_channel('order_queue:50054')
         stub = order_queue_grpc.QueueServiceStub(channel)
         request = order_queue.QueueRequest()
         responseQueue = stub.queueHasElements(request)
 
         if responseQueue.verdict == "Yes":
+
+            # Taking order from the queue
             channel = grpc.insecure_channel('order_queue:50054')
             stub = order_queue_grpc.QueueServiceStub(channel)
             request = order_queue.QueueRequest()
@@ -59,17 +62,18 @@ class ExecutorService(order_executor_grpc.ExecutorServiceServicer):
             
             logging.info("Order is being executed…")
 
-            # Read from database
+            # Read book quantity from database
             channel = grpc.insecure_channel('books_database_1:49664')
             stub = books_database_grpc.DatabaseServiceStub(channel)
             request = books_database.DatabaseReadRequest(book_title=responseQueue.bookTitle)
             responseDatabase = stub.readDatabase(request)
 
             if responseDatabase.quantity <= 0:
+                logging.info("Database does not have enough of this book -> order rejected.")
                 response.verdict = "Fail"
                 return response
 
-
+            # Asking microservices, if they are ready to update their info.
             prepareResponse = self.askForServicePrepared()
 
             if prepareResponse == "Pass" :
@@ -78,6 +82,7 @@ class ExecutorService(order_executor_grpc.ExecutorServiceServicer):
                     response.verdict = "Fail"
                     return response
             else :
+                logging.info("Microservices are not prepared to make the changes.")
                 response.verdict = "Fail"
                 return response
                         
@@ -102,21 +107,24 @@ class ExecutorService(order_executor_grpc.ExecutorServiceServicer):
 
     def askForServicePrepared(self):
 
-        channel = grpc.insecure_channel('books_database_1:49664')
-        stub = books_database_grpc.DatabaseServiceStub(channel)
-        request = books_database.DatabasePrepareRequest()
-        responseDatabase = stub.prepareToExecute(request)
+        while True: 
+            channel = grpc.insecure_channel('books_database_1:49664')
+            stub = books_database_grpc.DatabaseServiceStub(channel)
+            request = books_database.DatabasePrepareRequest()
+            responseDatabase = stub.prepareToExecute(request)
 
-        channel = grpc.insecure_channel('payment_system:49667')
-        stub = payment_system_grpc.PaymentServiceStub(channel)
-        request = payment_system.PaymentRequest()
-        responsePayment = stub.prepareToExecute(request)
+            channel = grpc.insecure_channel('payment_system:49667')
+            stub = payment_system_grpc.PaymentServiceStub(channel)
+            request = payment_system.PaymentRequest()
+            responsePayment = stub.prepareToExecute(request)
 
-        if responseDatabase.verdict == "Pass" and responsePayment.verdict == "Pass":
-            return "Pass"
-        else:
-            return "Fail"
-        
+            if responseDatabase.verdict == "Pass" and responsePayment.verdict == "Pass":
+                return "Pass"
+            else:
+                # If we get back fail from one of the microservices, we wait 0.5 seconds and go ask again.
+                logging.info("Sleeping to go ask again.")
+                time.sleep(0.5)
+            
     def commitChanges(self, bookTitle, bookQuantity):
 
         # Write to database
