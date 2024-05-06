@@ -313,6 +313,8 @@ def checkout():
                                 str(orderId))
 
 
+    global executor_working
+    
     while True :
         if executor_working == 'Yes':
             time.sleep(1)
