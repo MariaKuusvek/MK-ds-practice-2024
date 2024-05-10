@@ -220,85 +220,47 @@ def checkout():
     file.write(str(orderId))
     file.close() 
 
-    ## Creating threads to call out microservices
-    #thread_fraud = threading.Thread(target=fraud_detection_func, args=(request.json['creditCard']['number'],
-    #                                                                   request.json['user']['name'],
-    #                                                                   request.json['user']['contact']))
-    #thread_verification = threading.Thread(target=transaction_verification_func, args=(len(request.json['items']),
-    #                                                                                    request.json['user']['name'],
-    #                                                                                    request.json['user']['contact'],
-    #                                                                                    request.json['billingAddress']['street'],
-    #                                                                                    request.json['billingAddress']['city'],
-    #                                                                                    request.json['billingAddress']['state'],
-    #                                                                                    request.json['billingAddress']['zip'],
-    #                                                                                    request.json['billingAddress']['country'],
-    #                                                                                    request.json['creditCard']['number'],
-    #                                                                                    request.json['creditCard']['cvv'],
-    #                                                                                    request.json['creditCard']['expirationDate'],
-    #                                                                                    str(orderId)))
-    #thread_books = threading.Thread(target=books_suggestion_func)
-#
-    ## Starting threads
-    #thread_fraud.start()
-    #thread_verification.start()
-    #thread_books.start()
-#
-    #logging.info('Threads in orchestrator started')
-#
-    ## Ending threads
-    #thread_fraud.join()
-    #thread_verification.join()
-    #thread_books.join()
-#
-    #logging.info('Threads in orchestrator finished')
+    # Creating threads to call out microservices
+    thread_fraud = threading.Thread(target=fraud_detection_func, args=(request.json['creditCard']['number'],
+                                                                       request.json['user']['name'],
+                                                                       request.json['user']['contact']))
+    thread_verification = threading.Thread(target=transaction_verification_func, args=(len(request.json['items']),
+                                                                                        request.json['user']['name'],
+                                                                                        request.json['user']['contact'],
+                                                                                        request.json['billingAddress']['street'],
+                                                                                        request.json['billingAddress']['city'],
+                                                                                        request.json['billingAddress']['state'],
+                                                                                        request.json['billingAddress']['zip'],
+                                                                                        request.json['billingAddress']['country'],
+                                                                                        request.json['creditCard']['number'],
+                                                                                        request.json['creditCard']['cvv'],
+                                                                                        request.json['creditCard']['expirationDate'],
+                                                                                        str(orderId)))
+    thread_books = threading.Thread(target=books_suggestion_func)
+
+    # Starting threads
+    thread_fraud.start()
+    thread_verification.start()
+    thread_books.start()
+
+    logging.info('Threads in orchestrator started')
+
+    # Ending threads
+    thread_fraud.join()
+    thread_verification.join()
+    thread_books.join()
+
+    logging.info('Threads in orchestrator finished')
 
     order_status_response = {}
 
-    # Temporary success response, will change these back later
-    #response_verdict = 'Pass'
-    #response_reason = 'OK'
-    #response_books = "1,Book1,Author1;2,Book2,Author2"
 #
-    ## Creating response based on the results of the microservices
-    #if response_verdict != '' and response_reason != '':
-    #    if response_verdict == 'Pass':
-#
-    #        # Putting the verified order into a queue
-    #    
-    #        order_queue_func(request.json['items'][0]['quantity'],
-    #                            request.json['items'][0]['name'],
-    #                            request.json['user']['contact'],
-    #                            request.json['billingAddress']['street'],
-    #                            request.json['billingAddress']['city'],
-    #                            request.json['billingAddress']['state'],
-    #                            request.json['billingAddress']['zip'],
-    #                            request.json['billingAddress']['country'],
-    #                            request.json['creditCard']['number'],
-    #                            request.json['creditCard']['cvv'],
-    #                            request.json['creditCard']['expirationDate'],
-    #                            str(orderId))
-#
-    #        books = response_books.split(";")
-    #        books_object = []
-    #        for i in range(len(books)):
-    #            book_info = books[i].split(",")
-    #            books_object.append({'bookId': book_info[0], 'title': book_info[1], 'author': book_info[2]})
-#
-    #        order_status_response = {
-    #            'orderId': orderId,
-    #            'status': 'Order Approved',
-    #            'suggestedBooks': books_object
-    #        }
-    #    else:
-    #        order_status_response = {
-    #            'orderId': orderId,
-    #            'status': 'Order Rejected',
-    #            'suggestedBooks': []
-    #        }
+    # Creating response based on the results of the microservices
+    if response_verdict != '' and response_reason != '':
+        if response_verdict == 'Pass':
 
-
-    # Adding order into a queue
-    order_queue_func(request.json['items'][0]['quantity'],
+            # Putting the verified order into a queue
+            order_queue_func(request.json['items'][0]['quantity'],
                                 request.json['items'][0]['name'],
                                 request.json['user']['name'],
                                 request.json['user']['contact'],
@@ -311,40 +273,46 @@ def checkout():
                                 request.json['creditCard']['cvv'],
                                 request.json['creditCard']['expirationDate'],
                                 str(orderId))
+            
+
+            global executor_working
+            # Choosing an executor and executing the order
+            while True :
+                if executor_working == 'Yes':
+                    time.sleep(1)
+                else: 
+                    executor_working = "Yes"
+                    # Choosing an executer
+                    index = random.choice(range(1, 4))
+
+                    logging.info("order_executor"+str(index)+':5005'+str(index+5)+" has the right to access data.")
+
+                    # Executing an order
+                    with grpc.insecure_channel('order_executor_'+str(index)+':5005'+str(index+5)) as channel:
+                        stub = order_executor_grpc.ExecutorServiceStub(channel)
+                        response = stub.dequeueOrder(order_executor.ExecutorRequest())
+                    executor_working = "No"
+                    break
 
 
-    while True :
-        if executor_working == 'Yes':
-            time.sleep(1)
-        else: 
-            executor_working = "Yes"
-            # Choosing an executer
-            index = random.choice(range(1, 4))
+            books = response_books.split(";")
+            books_object = []
+            for i in range(len(books)):
+                book_info = books[i].split(",")
+                books_object.append({'bookId': book_info[0], 'title': book_info[1], 'author': book_info[2]})
 
-            logging.info("order_executor"+str(index)+':5005'+str(index+5)+" has the right to access data.")
-
-            # Executing an order
-            with grpc.insecure_channel('order_executor_'+str(index)+':5005'+str(index+5)) as channel:
-                stub = order_executor_grpc.ExecutorServiceStub(channel)
-                response = stub.dequeueOrder(order_executor.ExecutorRequest())
-            executor_working = "No"
-            break
-
-    # Putting together a response
-    orderStatus = ""
-    if response.verdict == "Pass":
-        orderStatus = "Order Approved"
-    else:
-        orderStatus = "Order REJECTED"
-
-    order_status_response = {
+            order_status_response = {
                 'orderId': orderId,
-                'status': orderStatus,
-                'suggestedBooks': [
-                    {'bookId': '123', 'title': 'Dummy Book 1', 'author': 'Author 1'},
-                    {'bookId': '456', 'title': 'Dummy Book 2', 'author': 'Author 2'}
-                ]
+                'status': 'Order Approved',
+                'suggestedBooks': books_object
             }
+        else:
+            order_status_response = {
+                'orderId': orderId,
+                'status': 'Order Rejected',
+                'suggestedBooks': []
+            }
+
 
     logging.info('Order status response created')
 
