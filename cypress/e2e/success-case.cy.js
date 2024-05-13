@@ -1,16 +1,15 @@
 
-
 describe('Success case', () => {
 
-  it('Navigating to checkout page', () => {
+  it('Test1', () => {
+
+    // Navigating to the checkout page
     cy.visit('http://localhost:8080/home')
+    cy.contains('Explore books').click() // Clicking to see the list of books
+    cy.contains('View Details').click() // Clicking to see one book details
+    cy.contains('Checkout').click() // Starting the checkout for that book
 
-    cy.contains('Explore books').click()
-
-    cy.contains('View Details').click()
-
-    cy.contains('Checkout').click()
-
+    // Entering the inouts for the checkout
     cy.get('input[name="userName"]').type('Mari Tamm')
     cy.get('input[name="userContact"]').type('maritamm@meil.com')
 
@@ -26,9 +25,12 @@ describe('Success case', () => {
 
     cy.get('input[name="termsAndConditionsAccepted"]').click()
 
+    // Submitting the order
     cy.contains('Submit').click()
 
+    // Checking the result
     cy.contains("Order Approved")
+    cy.contains("Suggested Books")
 
   })
 
