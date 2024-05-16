@@ -290,10 +290,9 @@ def checkout():
                     # Executing an order
                     with grpc.insecure_channel('order_executor_'+str(index)+':5005'+str(index+5)) as channel:
                         stub = order_executor_grpc.ExecutorServiceStub(channel)
-                        response = stub.dequeueOrder(order_executor.ExecutorRequest())
+                        response_executor = stub.dequeueOrder(order_executor.ExecutorRequest())
                     executor_working = "No"
                     break
-
 
             books = response_books.split(";")
             books_object = []
@@ -301,11 +300,18 @@ def checkout():
                 book_info = books[i].split(",")
                 books_object.append({'bookId': book_info[0], 'title': book_info[1], 'author': book_info[2]})
 
-            order_status_response = {
+            if response_executor.verdict == "Fail":
+                order_status_response = {
                 'orderId': orderId,
-                'status': 'Order Approved',
-                'suggestedBooks': books_object
-            }
+                'status': 'Order Rejected',
+                'suggestedBooks': []
+                }  
+            else:
+                order_status_response = {
+                    'orderId': orderId,
+                    'status': 'Order Approved',
+                    'suggestedBooks': books_object
+                }
         else:
             order_status_response = {
                 'orderId': orderId,

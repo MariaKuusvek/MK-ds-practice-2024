@@ -72,8 +72,8 @@ class DatabaseService(books_database_grpc.DatabaseServiceServicer):
         return response
     
     def prepareToExecute(self, request, context):
-        
-        num = random.random()
+        num = 1
+        #num = random.random()
         response = books_database.DatabasePrepareResponse()
 
         if num < 0.1:
