@@ -33,6 +33,7 @@ reader = PeriodicExportingMetricReader(
 )
 meterProvider = MeterProvider(resource=resource, metric_readers=[reader])
 metrics.set_meter_provider(meterProvider)
+meter = metrics.get_meter("orchestrator.meter")
 
 # This set of lines are needed to import the gRPC stubs.
 # The path of the stubs is relative to the current file, or absolute inside the container.
@@ -233,6 +234,10 @@ def checkout():
 
     logging.info('Checkout REST started')
 
+    # Verification failed counter
+    ver_fail_counter = meter.create_counter(name="verification_fails", description="number of verifications that failed", value_type=int)
+
+
     #startLeaderElection()
    
     # Print request object data
@@ -246,7 +251,8 @@ def checkout():
 
     file = open(path, "w")
     file.write(str(orderId))
-    file.close() 
+    file.close()
+
 
     # Creating threads to call out microservices
     thread_fraud = threading.Thread(target=fraud_detection_func, args=(request.json['creditCard']['number'],
@@ -341,6 +347,9 @@ def checkout():
                     'suggestedBooks': books_object
                 }
         else:
+
+            ver_fail_counter.add(1, {"fail_type": "ver_fail", "handled_by_user": True})
+
             order_status_response = {
                 'orderId': orderId,
                 'status': 'Order Rejected',

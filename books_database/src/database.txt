@@ -1,4 +1,4 @@
-Learning Python,8795
+Learning Python,8794
 JavaScript - The Good Parts,19
 Domain-Driven Design: Tackling Complexity in the Heart of Software,9582
 Design Patterns: Elements of Reusable Object-Oriented Software,14
