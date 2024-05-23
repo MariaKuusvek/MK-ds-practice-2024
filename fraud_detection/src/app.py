@@ -156,7 +156,7 @@ class FraudService(fraud_detection_grpc.FraudServiceServicer):
 
     def FraudCheckCreditCard(self):
 
-        logging.info('Fraud Detection: checking cre')
+        logging.info('Fraud Detection: checking credit card')
 
         # Checking that the credit card number is not made up only one number.
         for i in range(1, len(self.creditCardNr)):

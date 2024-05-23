@@ -194,3 +194,10 @@ services:
       - "4318:4318"
     environment:
       - OTEL_METRIC_EXPORT_INTERVAL=1000
+  prometheus:
+    image: prom/prometheus:v2.51.2
+    ports:
+      - "9090:9090"
+    command:
+      - --config.file=/prometheus.yml
+      - --enable-feature=exemplar-storage
